@@ -1,7 +1,9 @@
 <template>
-    <!-- <AppHeader></AppHeader> -->
-    <routerView></routerView>
-    <!-- <AppFooter></AppFooter> -->
+    <el-config-provider namespace="ep">
+        <AppHeader></AppHeader>
+        <routerView></routerView>
+        <AppFooter></AppFooter>
+    </el-config-provider>
 </template>
 
 <script setup>

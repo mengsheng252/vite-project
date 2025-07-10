@@ -1,5 +1,8 @@
 import path from 'node:path'
 import vue from '@vitejs/plugin-vue'
+import AutoImport from 'unplugin-auto-import/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import eslint from 'vite-plugin-eslint'
 
@@ -10,7 +13,13 @@ export default defineConfig({
         vue(),
         eslint({
             fix: true, // 自动修复
-            include: ['src/**/*.js', 'src/**/*.ts', 'src/**/*.vue']
+            include: ['src/**/*.js', 'src/**/*.vue']
+        }),
+        AutoImport({
+            resolvers: [ElementPlusResolver()]
+        }),
+        Components({
+            resolvers: [ElementPlusResolver()]
         })
     ],
     resolve: {
@@ -21,5 +30,12 @@ export default defineConfig({
     },
     optimizeDeps: {
         include: ['bootstrap', '@popperjs/core'] // 强制预构建
+    },
+    css: {
+        preprocessorOptions: {
+            scss: {
+                // additionalData: '@import "./src/assets/css/element/index.scss";'
+            }
+        }
     }
 })

@@ -2,7 +2,10 @@
     <div id="appHeader" class="app-header">
         <div class="menu d-flex">
             <div v-for="item in menu" :key="item.name" class="menu-item" @click="toView(item.path)">
-                {{ item.name }}
+                <!-- {{ item.name }} -->
+                <el-button type="primary">
+                    {{ item.name }}
+                </el-button>
             </div>
         </div>
     </div>
