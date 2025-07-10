@@ -1,21 +1,20 @@
 
 <template>
-  vite + vue3 + electron
+  <AppHeader></AppHeader>
+  <routerView></routerView>
+  <AppFooter></AppFooter>
 </template>
 
   <script setup>
+import AppFooter from '@/components/AppFooter.vue';
+import AppHeader from '@/components/AppHeader.vue';
+
   </script>
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+#appHeader{
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
 }
 </style>
