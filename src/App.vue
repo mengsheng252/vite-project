@@ -1,15 +1,14 @@
-
 <template>
-  <AppHeader></AppHeader>
-  <routerView></routerView>
-  <AppFooter></AppFooter>
+    <!-- <AppHeader></AppHeader> -->
+    <routerView></routerView>
+    <!-- <AppFooter></AppFooter> -->
 </template>
 
-  <script setup>
-import AppFooter from '@/components/AppFooter.vue';
-import AppHeader from '@/components/AppHeader.vue';
+<script setup>
+// import AppFooter from '@/components/AppFooter.vue'
+// import AppHeader from '@/components/AppHeader.vue'
+</script>
 
-  </script>
 <style scoped>
 #appHeader{
   position: fixed;

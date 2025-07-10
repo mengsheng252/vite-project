@@ -1,26 +1,37 @@
 {
   "name": "vite-project",
-  "main": "electron/main.js",
-  "private": true,
-  "version": "0.0.0",
   "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "electron": "nodemon --exec electron . --watch ./ --ext .js,.html,.css,.vue"
+    "electron": "nodemon --exec electron . --watch ./ --ext .js,.html,.css,.vue",
+    "lint": "eslint . --ext .js,.ts,.vue --fix",
+    "format": "prettier --write ."
   },
   "dependencies": {
+    "@antfu/eslint-config": "^4.16.2",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.7",
     "vue": "^3.5.17",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.36.0",
+    "@typescript-eslint/parser": "^8.36.0",
     "@vitejs/plugin-vue": "^6.0.0",
     "electron": "^37.2.0",
+    "eslint": "^9.30.1",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.5.1",
+    "eslint-plugin-vue": "^10.3.0",
     "nodemon": "^3.1.10",
+    "prettier": "^3.6.2",
     "sass": "^1.89.2",
-    "vite": "^7.0.3"
+    "vite": "^7.0.3",
+    "vite-plugin-eslint": "^1.8.1"
   }
 }
