@@ -19,3 +19,14 @@ const menu = [
   },
 ];
 </script>
+<style lang="scss" scoped>
+.app-header{
+    .menu{
+        column-gap: 20px;
+        .menu-item{
+            border: 1px solid pink;
+            padding: 20px;
+        }
+    }
+}
+</style>
