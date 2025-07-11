@@ -15,12 +15,12 @@ const router = createRouter({
         {
             path: '/imageConvert',
             name: 'ImageConvert',
-            component: () => import('@/views/imageConvert/jpg2png.vue'),
+            component: () => import('@/views/imageConvert/index.vue'),
             children: [
                 {
-                    path: 'jpg2png',
-                    name: 'Jpg2png',
-                    component: () => import('@/views/imageConvert/jpg2png.vue')
+                    path: 'index',
+                    name: 'index',
+                    component: () => import('@/views/imageConvert/index.vue')
                 }
             ]
         }
