@@ -15,6 +15,5 @@ declare module 'vue' {
     Message: typeof import('./src/components/Message.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    ShowMessage: typeof import('./src/components/ShowMessage.vue')['default']
   }
 }

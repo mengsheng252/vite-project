@@ -7,8 +7,14 @@ const defaultExt = '.png,.jpeg,.jpg,.gif,.webp,.bmp,.svg,.ico,.tiff,.heif,.avif,
 // const defaultExt = '.png,.jpeg,.jpg'
 const defaultMultiple = true // 是否允许多选
 
-export function doConvert() {
-    pickImage()
+export function doConvert(files) {
+    console.log('files', files)
+    // electron环境才能获取file对象的path属性
+    const filePath = files.map(x => x.path)
+    console.log('filePath', filePath)
+
+    // window.electron.ipcRenderer.send('process-image', filePath)
+    // window.electronAPI.handleFileDirectly(files[0])
 }
 
 /**
@@ -16,7 +22,7 @@ export function doConvert() {
  * @param {*} ext 类型
  * @param {*} multiple 多选
  */
-async function pickImage(ext = defaultExt, multiple = defaultMultiple) {
+export async function pickImage(ext = defaultExt, multiple = defaultMultiple) {
     const images = []
     const errFiles = []
     const files = await pick(ext, multiple)
@@ -38,4 +44,9 @@ async function pickImage(ext = defaultExt, multiple = defaultMultiple) {
         const errFilesName = errFiles.map(x => x.name).join()
         window.$message.error(`以下文件上传失败：${errFilesName}`)
     }
+    console.log('files', images)
+
+    return images
+
+    // todo 剔除重复文件（文件名）
 }
