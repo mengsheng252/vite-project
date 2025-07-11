@@ -1,4 +1,7 @@
+// import { getCurrentInstance } from 'vue'
 import { isImageByLoading, pick } from '@/utils/webtool'
+
+// const { proxy } = getCurrentInstance()
 
 const defaultExt = '.png,.jpeg,.jpg,.gif,.webp,.bmp,.svg,.ico,.tiff,.heif,.avif,.apng,.jp2,.jxl,.psd,.raw,.cr2,.nef,.orf,.sr2,.dng'
 // const defaultExt = '.png,.jpeg,.jpg'
@@ -30,6 +33,9 @@ async function pickImage(ext = defaultExt, multiple = defaultMultiple) {
             errFiles.push(files[i])
         }
     }
-    // 提取未上传成功的图片toast提示哪些文件上传失败及其原因？
-    console.log('上传的图片：', images)
+    // 上传失败提示
+    if (errFiles.length) {
+        const errFilesName = errFiles.map(x => x.name).join()
+        window.$message.error(`以下文件上传失败：${errFilesName}`)
+    }
 }

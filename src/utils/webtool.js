@@ -72,19 +72,15 @@ export function isImageByLoading(file) {
     return new Promise((resolve) => {
         const url = createSafeObjectURL(file)
         if (url) {
-            console.log('url-75', url)
-
             const img = new Image()
             img.src = url
             img.onload = () => {
                 URL.revokeObjectURL(url)
-                console.log(' 图片 load成功')
-
                 resolve(true)
             }
             img.onerror = () => {
                 URL.revokeObjectURL(url)
-                console.log(' 图片 load失败')
+                console.log('image load error')
                 resolve(false)
             }
         }
