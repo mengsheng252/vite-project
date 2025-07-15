@@ -1,3 +1,15 @@
-.ep-button{
+.el-button{
+    min-width: 80px;
+    width: fit-content;
+    height: 40px;
     border-radius: 4px;
+}
+
+:deep(.el-select){
+    min-width: 100px;
+    width: fit-content;
+    border-radius: 4px;
+    .el-select__wrapper{
+        height: 32px;
+    }
 }

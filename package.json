@@ -6,10 +6,10 @@
   "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
     "preview": "vite preview",
+    "build": "vite build",
     "start": "electron .",
-    "electron": "nodemon --exec electron . --watch ./ --ext .js,.html,.css,.vue",
+    "electron": "nodemon --exec electron . --watch ./ --ext .js,.html,.css,.vue.scss",
     "lint": "eslint . --ext .js,.vue --fix",
     "format": "prettier --write ."
   },
@@ -18,8 +18,9 @@
     "@element-plus/icons-vue": "^2.3.1",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.7",
-    "element-plus": "^2.10.3",
-    "gm": "^1.25.1",
+    "element-plus": "^2.10.4",
+    "file-type": "^21.0.0",
+    "sharp": "^0.34.3",
     "typescript": "^5.8.3",
     "vue": "^3.5.17",
     "vue-router": "^4.5.1"
@@ -37,6 +38,7 @@
     "unplugin-auto-import": "^19.3.0",
     "unplugin-vue-components": "^28.8.0",
     "vite": "^7.0.4",
+    "vite-plugin-electron": "^0.29.0",
     "vite-plugin-eslint": "^1.8.1"
   }
 }

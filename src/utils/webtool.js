@@ -65,12 +65,19 @@ export function pick(accept, multiple) {
 
 /**
  * 通过浏览器渲染判断是否为图片，大文件性能差
- * @param {*} file 文件
+ * @param {*} file 文件或者文件路径
  * @returns boolean
  */
 export function isImageByLoading(file) {
     return new Promise((resolve) => {
-        const url = createSafeObjectURL(file)
+        let url
+        if (file instanceof File) {
+            url = createSafeObjectURL(file)
+        }
+        else {
+            // 路径字符串无法在浏览器环境判断
+            resolve(false)
+        }
         if (url) {
             const img = new Image()
             img.src = url
@@ -101,7 +108,6 @@ function createSafeObjectURL(file) {
         console.error('文件为空或已损坏', file)
         return null
     }
-
     // 尝试生成 URL
     try {
         const url = URL.createObjectURL(file)
