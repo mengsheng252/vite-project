@@ -11,12 +11,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
     // getFilePath: (file) => ipcRenderer.invoke('get-file-path', file.path)
   },
   getDesktopPath: ()=> ipcRenderer.invoke('get-desktop-path'),
-  openFileDialog: () => ipcRenderer.send('open-file-dialog'),
+  openFileDialog: (options) => ipcRenderer.send('open-file-dialog', options),
   onFileSelected: (callback) => {
     // 监听主进程返回的文件信息
     ipcRenderer.on('file-selected', (event, data) => callback(data))
   },
-  handleFileSwitch: (info) => ipcRenderer.invoke('handle-file-switch', info),
+  handleImageConvert: (info) => ipcRenderer.invoke('handle-image-convert', info),
   handlePath: () => ipcRenderer.invoke('select-output-path'),
   openFolder: ()=> ipcRenderer.send('open-folder')
 })

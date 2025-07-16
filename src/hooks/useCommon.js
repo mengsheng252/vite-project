@@ -1,15 +1,45 @@
-// import { getCurrentInstance } from 'vue'
 import { isImageByLoading, pick } from '@/utils/webtool'
-
-// const { proxy } = getCurrentInstance()
-
+// image type
 const defaultExt = '.png,.jpeg,.jpg,.gif,.webp,.bmp,.svg,.ico,.tiff,.heif,.avif,.apng,.jp2,.jxl,.psd,.raw,.cr2,.nef,.orf,.sr2,.dng'
-const defaultMultiple = true // 是否允许多选
 
+// 选择文件参数配置
+const openImageOptions = {
+    title: '选择文件',
+    properties: ['openFile', 'multiSelections'],
+    filters: [
+        { name: 'Images', extensions: ['jpg', 'png'] }
+        // { name: 'All Files', extensions: ['*'] }
+    ]
+}
+
+/**
+ * 上传图片
+ */
+export function uploadImage({ multiple }) {
+    const options = openImageOptions
+    if (!multiple) {
+        options.properties = ['openFile']
+    }
+    // 通知主进程打开文件对话框
+    window.electronAPI.openFileDialog(options)
+}
+
+/**
+ * 图片转换
+ * @param {*} filePath
+ * @param {*} format
+ * @returns Promise
+ */
 export async function convertImage(filePath, format) {
-    console.log('filePath', filePath, format)
     // electron环境才能获取file对象的path属性
-    return window.electronAPI.handleFileSwitch({ filePath, format })
+    return window.electronAPI.handleImageConvert({ filePath, format })
+}
+
+/**
+ * 打开文件夹
+ */
+export function openFolder() {
+    window.electronAPI.openFolder()
 }
 
 /**
@@ -17,7 +47,7 @@ export async function convertImage(filePath, format) {
  * @param {*} ext 类型
  * @param {*} multiple 多选
  */
-export async function pickImage(ext = defaultExt, multiple = defaultMultiple) {
+export async function pickImage(ext = defaultExt, multiple = true) {
     const images = []
     const errFiles = []
     const files = await pick(ext, multiple)

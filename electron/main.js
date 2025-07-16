@@ -17,23 +17,27 @@ function createWindow() {
     height: 800,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      contextIsolation: true, // 推荐开启
-      nodeIntegration: false // 推荐关闭
+      // 启用安全相关功能
+      contextIsolation: true, // 强烈建议启用
+      sandbox: true, // 启用沙箱
+      webSecurity: true, // 启用web安全
+      nodeIntegration: false, // 如果不需要Node集成，设为false更安全
+      enableRemoteModule: false // 禁用remote模块
     }
   })
 
   // 将链接修改成我们运行Vue时的地址：http://localhost:5173
   // mainWin.loadFile(path.join(__dirname, "./index.html"));
-  // mainWin.loadURL('http://localhost:5173', {
-  //   extraFiles: [
-  //     'node_modules/element-plus/dist/**/*' // 打包时包含 Element 样式
-  //   ]
-  // })
-  mainWin.loadFile(path.join(__dirname, '../dist/index.html'), {
+  mainWin.loadURL('http://localhost:5173', {
     extraFiles: [
       'node_modules/element-plus/dist/**/*' // 打包时包含 Element 样式
     ]
   })
+  // mainWin.loadFile(path.join(__dirname, '../dist/index.html'), {
+  //   extraFiles: [
+  //     'node_modules/element-plus/dist/**/*' // 打包时包含 Element 样式
+  //   ]
+  // })
   mainWin.webContents.openDevTools()
 }
 
@@ -50,14 +54,8 @@ app.on('window-all-closed', () => {
 })
 
 // 打开文件选择窗口
-ipcMain.on('open-file-dialog', async () => {
-  const result = await dialog.showOpenDialog({
-    properties: ['openFile', 'multiSelections'],
-    filters: [
-      { name: 'Images', extensions: ['jpg', 'png', 'gif', 'webp'] },
-      { name: 'All Files', extensions: ['*'] }
-    ]
-  })
+ipcMain.on('open-file-dialog', async (event,options) => {
+  const result = await dialog.showOpenDialog(options)
   if (!result.canceled) {
     // 真实文件路径 & 过滤文件仅保留图片类型
     const filePaths = result.filePaths.filter((filePath) => {
@@ -74,7 +72,7 @@ ipcMain.on('open-file-dialog', async () => {
 })
 
 //接收图片转换事件
-ipcMain.handle('handle-file-switch', async (event, info) => {
+ipcMain.handle('handle-image-convert', async (event, info) => {
   // 解析文件路径
   const parsedPath = path.parse(info.filePath)
   // 获取文件名（不包括后缀）
@@ -95,6 +93,6 @@ ipcMain.handle('get-desktop-path', () => {
   return storagePath
 })
 // 打开文件夹
-ipcMain.on('open-folder', ()=>{
+ipcMain.on('open-folder', () => {
   openFolder(storagePath)
 })

@@ -1,21 +1,21 @@
 <template>
     <el-config-provider>
         <AppHeader></AppHeader>
+        <Storage></Storage>
         <routerView></routerView>
-        <AppFooter></AppFooter>
     </el-config-provider>
 </template>
 
 <script setup>
-import AppFooter from '@/components/AppFooter.vue'
 import AppHeader from '@/components/AppHeader.vue'
+import Storage from '@/components/Storage.vue'
 </script>
 
 <style scoped>
-#appHeader{
+/* #appHeader{
   position: fixed;
   top: 0;
   right: 0;
   left: 0;
-}
+} */
 </style>
