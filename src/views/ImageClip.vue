@@ -46,6 +46,6 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .image-clip{
-
+    user-select: none;
 }
 </style>

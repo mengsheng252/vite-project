@@ -42,6 +42,10 @@ export function openFolder() {
     window.electronAPI.openFolder()
 }
 
+export function saveImage(imageData) {
+    window.electronAPI.saveImage(imageData)
+}
+
 /**
  * 筛选文件格式
  * @param {*} ext 类型

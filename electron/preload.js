@@ -18,5 +18,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   },
   handleImageConvert: (info) => ipcRenderer.invoke('handle-image-convert', info),
   handlePath: () => ipcRenderer.invoke('select-output-path'),
-  openFolder: ()=> ipcRenderer.send('open-folder')
+  openFolder: ()=> ipcRenderer.send('open-folder'),
+  saveImage: (imageData) => ipcRenderer.invoke('save-image', imageData)
 })

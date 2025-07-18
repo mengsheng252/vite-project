@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url'
 import { isImageFile } from './imageCheck.js'
 import { convertImage } from './imageMagick.js'
 import { ensureOutputDirExists, getDesktopPath, selectFolder, openFolder } from './output.js'
+import { saveImage } from './saveFile.js'
 
 let storagePath = ''
 
@@ -28,16 +29,16 @@ function createWindow() {
 
   // 将链接修改成我们运行Vue时的地址：http://localhost:5173
   // mainWin.loadFile(path.join(__dirname, "./index.html"));
-  mainWin.loadURL('http://localhost:5173', {
-    extraFiles: [
-      'node_modules/element-plus/dist/**/*' // 打包时包含 Element 样式
-    ]
-  })
-  // mainWin.loadFile(path.join(__dirname, '../dist/index.html'), {
+  // mainWin.loadURL('http://localhost:5173', {
   //   extraFiles: [
   //     'node_modules/element-plus/dist/**/*' // 打包时包含 Element 样式
   //   ]
   // })
+  mainWin.loadFile(path.join(__dirname, '../dist/index.html'), {
+    extraFiles: [
+      'node_modules/element-plus/dist/**/*' // 打包时包含 Element 样式
+    ]
+  })
   mainWin.webContents.openDevTools()
 }
 
@@ -92,7 +93,13 @@ ipcMain.handle('get-desktop-path', () => {
   storagePath = getDesktopPath()
   return storagePath
 })
+
 // 打开文件夹
 ipcMain.on('open-folder', () => {
   openFolder(storagePath)
+})
+
+// 添加保存图片的IPC处理
+ipcMain.handle('save-image', async (event, imageData) => {
+  saveImage(imageData, storagePath)
 })

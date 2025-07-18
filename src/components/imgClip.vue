@@ -1,10 +1,18 @@
 <template>
     <div class="img-clip">
         <div class="crop-container">
-            <!-- <img id="imagePreview" :src="`file://${src.replace(/\\/g, '/')}`" alt="预览图片"> -->
-            <img id="imagePreview" src="@/assets/images/1.jpg" alt="预览图片">
+            <!-- 底图 -->
+            <img id="imagePreview" :src="`file://${src.replace(/\\/g, '/')}`" @load="init">
+            <!-- <img id="imagePreview" src="@/assets/images/1.jpg" @load="init"> -->
             <div class="crop-overlay">
+                <!-- 遮罩 -->
+                <div class="mask"></div>
                 <div id="cropArea" class="crop-area">
+                    <!-- 对照图片 -->
+                    <div class="warpper">
+                        <!-- <img id="compareImg" src="@/assets/images/1.jpg" alt=""> -->
+                        <img id="compareImg" :src="`file://${src.replace(/\\/g, '/')}`" alt="">
+                    </div>
                     <div id="handleTL" class="crop-handle"></div>
                     <div id="handleTR" class="crop-handle"></div>
                     <div id="handleBL" class="crop-handle"></div>
@@ -12,16 +20,20 @@
                 </div>
             </div>
         </div>
-        <el-button id="cropButton" type="primary">
+        <el-button type="primary" @click="crop">
             裁剪
         </el-button>
+        <el-button v-if="cropSrc" type="primary" @click="saveImage(cropSrc)">
+            下载
+        </el-button>
         <canvas id="cropCanvas" style="display: none"></canvas>
-        <img id="cropResult" src="" alt="裁剪结果">
+        <img v-if="cropSrc" id="cropResult" :src="cropSrc" alt="裁剪结果">
     </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { ref } from 'vue'
+import { saveImage } from '@/hooks/useCommon'
 
 defineProps({
     src: {
@@ -30,133 +42,186 @@ defineProps({
     }
 })
 
-function init() {
-    const image = document.getElementById('imagePreview')
-    let activeHandle = ''
-    const start = {
-        x: 0,
-        y: 0
-    }
-    image.onload = () => {
-        const cropArea = document.getElementById('cropArea')
-        const imageRect = image.getBoundingClientRect()
-        const cropRect = {
-            x: 0,
-            y: 0,
-            width: imageRect.width * 0.5,
-            height: imageRect.height * 0.5
-        }
-        // 获取四个手柄,添加监听事件
-        const handles = {
-            tl: document.getElementById('handleTL'),
-            tr: document.getElementById('handleTR'),
-            bl: document.getElementById('handleBL'),
-            br: document.getElementById('handleBR')
-        }
-        for (const handle in handles) {
-            handles[handle].addEventListener('mousedown', mousedown)
-        }
-        // 监听裁剪区域拖动事件
-        cropArea.addEventListener('mousedown', mousedown)
-        updateCropRect()
-        function updateCropRect() {
-            // console.log('imageRect ', imageRect)
-            // console.log('cropRect ', cropRect)
-            // cropArea.style.width = `${cropRect.width - cropRect.x}px`
-            // cropArea.style.height = `${cropRect.height - cropRect.y}px`
-            cropArea.style.left = `${cropRect.x}px`
-            cropArea.style.top = `${cropRect.y}px`
-            cropArea.style.width = `${cropRect.width}px`
-            cropArea.style.height = `${cropRect.height}px`
+const cropSrc = ref('')
 
-            // 更新手柄位置
-            // handles.tl.style.left = '0px'
-            // handles.tl.style.top = '0px'
+let cropArea
+let compareImg
+let imageRect
 
-            // handles.tr.style.left = `${cropRect.width - 16}px`
-            // handles.tr.style.top = '0px'
+let cropRect = {
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0
+}
+let activeHandle = ''
+let handles = {}
 
-            // handles.bl.style.left = '0px'
-            // handles.bl.style.top = `${cropRect.height - 16}px`
+const start = {
+    x: 0,
+    y: 0
+}
 
-            // handles.br.style.left = `${cropRect.width - 16}px`
-            // handles.br.style.top = `${cropRect.height - 16}px`
-        }
-
-        function mousedown(e) {
-            document.addEventListener('mousemove', mousemove)
-            console.log('mousedown', e.target)
-            activeHandle = e.target
-            // 记录起始位置
-            start.x = e.clientX
-            start.y = e.clientY
-            document.addEventListener('mouseup', mouseup)
-        }
-
-        function mouseup() {
-            document.removeEventListener('mousemove', mousemove)
-        }
-
-        function mousemove(e) {
-            console.log('mousemove', e)
-            const dx = e.clientX - start.x
-            const dy = e.clientY - start.y
-            // 四个手柄是根据裁剪区域定位四个角落，所以只需要更新裁剪区域即可
-            // 50为控制最小裁剪区域
-            if (activeHandle === handles.tl) {
-                // 左上角手柄
-                if (cropRect.width - dx >= 50) {
-                    cropRect.x += dx
-                    cropRect.width -= dx
-                }
-                if (cropRect.height - dy >= 50) {
-                    cropRect.y += dy
-                    cropRect.height -= dy
-                }
-            }
-            if (activeHandle === handles.tr) {
-                // 右上角手柄
-                if (cropRect.width + dx >= 50) {
-                    cropRect.width += dx
-                }
-                if (cropRect.height - dy >= 50) {
-                    cropRect.y += dy
-                    cropRect.height -= dy
-                }
-            }
-            if (activeHandle === handles.bl) {
-                // 左下角手柄
-                if (cropRect.width + dx >= 50) {
-                    cropRect.x += dx
-                    cropRect.width -= dx
-                }
-                if (cropRect.height + dy >= 50) {
-                    cropRect.height += dy
-                }
-            }
-            if (activeHandle === handles.br) {
-                // 右下角手柄
-                if (cropRect.width + dx >= 50) {
-                    cropRect.width += dx
-                }
-                if (cropRect.height + dy >= 50) {
-                    cropRect.height += dy
-                }
-            }
-            if (activeHandle === cropArea) {
-                cropRect.x += dx
-                cropRect.y += dy
-            }
-            updateCropRect()
-            start.x = e.clientX
-            start.y = e.clientY
+function removeEventListener() {
+    for (const handle in handles) {
+        if (handle) {
+            handles[handle].removeEventListener('mousedown', mousedown)
         }
     }
 }
 
-onMounted(() => {
-    init()
-})
+function mousedown(e) {
+    document.addEventListener('mousemove', mousemove)
+    activeHandle = e.target
+    // 记录起始位置
+    start.x = e.clientX
+    start.y = e.clientY
+    document.addEventListener('mouseup', mouseup)
+}
+
+function mousemove(e) {
+    const dx = e.clientX - start.x
+    const dy = e.clientY - start.y
+    // 四个手柄是根据裁剪区域定位四个角落，所以只需要更新裁剪区域即可
+    // 50为控制最小裁剪区域
+    if (activeHandle === handles.tl) {
+        // 左上角手柄
+        if (cropRect.width - dx >= 50 && cropRect.x + dx >= 0) {
+            cropRect.x += dx
+            cropRect.width -= dx
+        }
+        if (cropRect.height - dy >= 50 && cropRect.y + dy >= 0) {
+            cropRect.y += dy
+            cropRect.height -= dy
+        }
+    }
+    if (activeHandle === handles.tr) {
+        // 右上角手柄  计算移动之后位置未超出限制区域才进行计算
+        if (cropRect.width + dx >= 50 && cropRect.width + dx + cropRect.x <= imageRect.width) {
+            cropRect.width += dx
+        }
+        if (cropRect.height - dy >= 50 && cropRect.y + dy >= 0) {
+            cropRect.y += dy
+            cropRect.height -= dy
+        }
+    }
+    if (activeHandle === handles.bl) {
+        // 左下角手柄
+        if (cropRect.width - dx >= 50 && cropRect.x + dx >= 0) {
+            cropRect.x += dx
+            cropRect.width -= dx
+        }
+        if (cropRect.height + dy >= 50 && cropRect.height + dy + cropRect.y <= imageRect.height) {
+            cropRect.height += dy
+        }
+    }
+    if (activeHandle === handles.br) {
+        // 右下角手柄
+        if (cropRect.width + dx >= 50 && cropRect.width + dx + cropRect.x <= imageRect.width) {
+            cropRect.width += dx
+        }
+        if (cropRect.height + dy >= 50 && cropRect.height + dy + cropRect.y <= imageRect.height) {
+            cropRect.height += dy
+        }
+    }
+    // 拖动整个裁剪区域，避免移出图片外
+    if (activeHandle === cropArea) {
+        const x1 = cropRect.x + dx
+        const x2 = x1 + cropRect.width
+        const y1 = cropRect.y + dy
+        const y2 = y1 + cropRect.height
+        if (x1 >= 0 && y1 >= 0 && x2 <= imageRect.width && y2 <= imageRect.height) {
+            cropRect.x += dx
+            cropRect.y += dy
+        }
+    }
+    updateCropRect()
+    start.x = e.clientX
+    start.y = e.clientY
+}
+
+function mouseup() {
+    document.removeEventListener('mousemove', mousemove)
+}
+
+function init() {
+    // 清除监听事件
+    removeEventListener()
+    //
+    cropArea = document.getElementById('cropArea')
+    compareImg = document.getElementById('compareImg')
+    const image = document.getElementById('imagePreview')
+    imageRect = image.getBoundingClientRect()
+    cropRect = {
+        x: 0,
+        y: 0,
+        width: imageRect.width * 0.5,
+        height: imageRect.height * 0.5
+    }
+    // 设置对照图片的宽高和定位
+    compareImg.style.width = `${imageRect.width}px`
+    compareImg.style.height = `${imageRect.height}px`
+    // 获取四个手柄,添加监听事件
+    handles = {
+        tl: document.getElementById('handleTL'),
+        tr: document.getElementById('handleTR'),
+        bl: document.getElementById('handleBL'),
+        br: document.getElementById('handleBR')
+    }
+    for (const handle in handles) {
+        handles[handle].addEventListener('mousedown', mousedown)
+    }
+    // 监听裁剪区域拖动事件
+    cropArea.addEventListener('mousedown', mousedown)
+    updateCropRect()
+}
+
+function updateCropRect() {
+    cropArea.style.left = `${cropRect.x}px`
+    cropArea.style.top = `${cropRect.y}px`
+    cropArea.style.width = `${cropRect.width}px`
+    cropArea.style.height = `${cropRect.height}px`
+    // 设置对照图片的定位
+    compareImg.style.left = `${-cropRect.x}px`
+    compareImg.style.top = `${-cropRect.y}px`
+}
+
+function crop() {
+    const image = document.getElementById('imagePreview')
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+    // 获取图片实际像素和显示像素
+    const naturalWidth = image.naturalWidth
+    const naturalHeight = image.naturalHeight
+    const imageRect = image.getBoundingClientRect()
+    const scaleX = naturalWidth / imageRect.width
+    const scaleY = naturalHeight / imageRect.height
+
+    // 计算实际像素的裁剪区域
+    const sx = cropRect.x * scaleX
+    const sy = cropRect.y * scaleY
+    const sw = cropRect.width * scaleX
+    const sh = cropRect.height * scaleY
+
+    // 设置canvas尺寸为裁剪区域的实际像素
+    canvas.width = sw
+    canvas.height = sh
+
+    ctx.drawImage(
+        image,
+        sx,
+        sy,
+        sw,
+        sh, // 源图像的裁剪区域（实际像素）
+        0,
+        0,
+        sw,
+        sh // 画到canvas的区域
+    )
+
+    // 返回Base64数据
+    cropSrc.value = canvas.toDataURL('image/jpeg', 0.92)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -173,6 +238,18 @@ svg {
   #imagePreview {
     max-width: 100%;
     display: block;
+    user-select: none;
+  }
+
+  .mask {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.5);
+    pointer-events: none;
   }
 
   .crop-overlay {
@@ -181,7 +258,18 @@ svg {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    overflow: hidden;
+    #compareImg {
+      width: 100%;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
   }
 
   .crop-area {
@@ -194,6 +282,15 @@ svg {
     box-sizing: border-box;
     z-index: 10;
     cursor: move;
+    .warpper{
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        overflow: hidden;
+        pointer-events: none;
+    }
   }
 
   .crop-handle {
@@ -204,26 +301,31 @@ svg {
     background-color: white;
     border-radius: 50%;
     cursor: move;
+    z-index: 3;
   }
 
   #handleTL {
     top: 0;
     left: 0;
+    transform: translate(-50%, -50%);
   }
 
-  #handleTR{
-    top:0;
+  #handleTR {
+    top: 0;
     right: 0;
+    transform: translate(50%, -50%);
   }
 
-  #handleBL{
-    bottom:0;
-    left:0
+  #handleBL {
+    bottom: 0;
+    left: 0;
+    transform: translate(-50%, 50%);
   }
 
-  #handleBR{
+  #handleBR {
     right: 0;
     bottom: 0;
+    transform: translate(50%, 50%);
   }
 
   #cropResult {
