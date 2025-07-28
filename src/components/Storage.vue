@@ -4,10 +4,16 @@
             <div class="path-label">
                 保存路径：
             </div>
-            <div class="select-storage-path btn border border-primary text-ellipsis" :title="storagePath" @click="handlePath">
+            <div
+                class="select-storage-path btn border border-primary text-ellipsis"
+                :title="storagePath"
+                @click="handlePath">
                 {{ storagePath }}
             </div>
-            <el-button type="primary" class="ms-3" @click="openFolder">
+            <el-button
+                type="primary"
+                class="ms-3"
+                @click="openFolder">
                 立即查看
             </el-button>
         </div>

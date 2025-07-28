@@ -1,5 +1,7 @@
 <template>
-    <div id="appAside" class="app-aside">
+    <div
+        id="appAside"
+        class="app-aside">
         <el-menu
             default-active="2"
             class="el-menu-vertical-demo"
@@ -7,11 +9,17 @@
             @close="handleClose"
             @select="handleSelect"
         >
-            <el-sub-menu v-for="subMenu in menus" :key="subMenu.id" :index="subMenu.id">
+            <el-sub-menu
+                v-for="subMenu in menus"
+                :key="subMenu.id"
+                :index="subMenu.id">
                 <template #title>
                     {{ subMenu.label }}
                 </template>
-                <el-menu-item v-for="menu in subMenu.child" :key="menu.id" :index="menu.id">
+                <el-menu-item
+                    v-for="menu in subMenu.child"
+                    :key="menu.id"
+                    :index="menu.id">
                     {{ menu.label }}
                 </el-menu-item>
             </el-sub-menu>

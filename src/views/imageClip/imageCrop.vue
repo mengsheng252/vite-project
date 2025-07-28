@@ -1,5 +1,7 @@
 <template>
-    <div v-loading="loading" class="image-crop p-3">
+    <div
+        v-loading="loading"
+        class="image-crop p-3">
         <div class="container">
             <!-- <el-button type="primary" class="upload-btn" @click="uploadImage">
                 <div>上传图片</div>
@@ -8,7 +10,9 @@
                 </el-icon>
             </el-button> -->
             <FileUpload></FileUpload>
-            <img-crop v-if="src" :src="src"></img-crop>
+            <img-crop
+                v-if="src"
+                :src="src"></img-crop>
         </div>
     </div>
 </template>

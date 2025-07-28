@@ -6,13 +6,19 @@
             <div>固定宽高缩放：以原图像素大小进行设置展示(保持宽高比)，不展示效果图</div>
         </div>
         <FileUpload></FileUpload>
-        <!-- <img :src="`file://${src.replace(/\\/g, '/')}`" alt=""> -->
-        {{ src }}
-        <div v-if="src" class="content d-flex align-items-start">
-            <!-- <img id="source" src="@/assets/images/1.jpg" @load="init"> -->
-            <img v-if="src" id="source" :src="`file://${src.replace(/\\/g, '/')}`" alt="" @load="init">
+        <div
+            v-if="src"
+            class="content d-flex align-items-start">
+            <img
+                id="source"
+                src="@/assets/images/1.jpg"
+                @load="init">
+            <!-- <img v-if="src" id="source" :src="`file://${src.replace(/\\/g, '/')}`" alt="" @load="init"> -->
             <div class="func-size d-flex flex-column h-100">
-                <el-select v-model="method" placeholder="Select" style="width: 240px">
+                <el-select
+                    v-model="method"
+                    placeholder="Select"
+                    style="width: 240px">
                     <el-option
                         v-for="item in options"
                         :key="item.value"
@@ -20,19 +26,35 @@
                         :value="item.value"
                     />
                 </el-select>
-                <div v-if="method === 1" class="size-select d-flex align-items-center">
-                    <el-input-number v-model="ratio" :max="100" :min="1" @change="handleRatio"></el-input-number>
+                <div
+                    v-if="method === 1"
+                    class="size-select d-flex align-items-center">
+                    <el-input-number
+                        v-model="ratio"
+                        :max="100"
+                        :min="1"
+                        @change="handleRatio"></el-input-number>
                     <div>%</div>
                 </div>
-                <div v-if="method === 2" class="size-select d-flex align-items-center">
+                <div
+                    v-if="method === 2"
+                    class="size-select d-flex align-items-center">
                     <div class="settings d-flex flex-column">
                         <div class="width d-flex align-items-center">
                             宽：
-                            <el-input-number v-model="showSize.width" :max="Number.parseInt(actualSize.width)" :min="1" @change="handleShowWidth"></el-input-number>
+                            <el-input-number
+                                v-model="showSize.width"
+                                :max="Number.parseInt(actualSize.width)"
+                                :min="1"
+                                @change="handleShowWidth"></el-input-number>
                         </div>
                         <div class="height d-flex align-items-center">
                             高：
-                            <el-input-number v-model="showSize.height" :max="Number.parseInt(actualSize.height)" :min="1" @change="handleShowHeight"></el-input-number>
+                            <el-input-number
+                                v-model="showSize.height"
+                                :max="Number.parseInt(actualSize.height)"
+                                :min="1"
+                                @change="handleShowHeight"></el-input-number>
                         </div>
                     </div>
                 </div>
@@ -41,8 +63,11 @@
                 </el-button>
             </div>
             <div class="result d-flex justify-content-center align-items-center">
-                <!-- <img v-if="method === 1" id="target" src="@/assets/images/1.jpg"> -->
-                <img v-if="src && method === 1" id="target" :src="`file://${src.replace(/\\/g, '/')}`">
+                <img
+                    v-if="method === 1"
+                    id="target"
+                    src="@/assets/images/1.jpg">
+                <!-- <img v-if="src && method === 1" id="target" :src="`file://${src.replace(/\\/g, '/')}`"> -->
             </div>
         </div>
     </div>

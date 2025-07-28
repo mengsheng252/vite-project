@@ -1,5 +1,7 @@
 <template>
-    <div v-loading="loading" class="image-convert p-3">
+    <div
+        v-loading="loading"
+        class="image-convert p-3">
         <Storage></Storage>
         <div class="container d-flex flex-column">
             <!-- <el-button type="primary" class="upload-btn" @click="uploadImage">
@@ -13,12 +15,23 @@
                 <div class="show-files">
                     <div>文件列表：</div>
                     <div class="file-list d-flex">
-                        <div v-for="info, index in fileInfo" :key="info.name" class="file position-relative">
-                            <el-icon class="close-btn position-absolute" color="#409EFF" @click="removeFile(index)">
+                        <div
+                            v-for="info, index in fileInfo"
+                            :key="info.name"
+                            class="file position-relative">
+                            <el-icon
+                                class="close-btn position-absolute"
+                                color="#409EFF"
+                                @click="removeFile(index)">
                                 <CircleCloseFilled />
                             </el-icon>
-                            <img class="cover" :src="info.path" alt="">
-                            <div class="file-name text-ellipsis" :title="info.name">
+                            <img
+                                class="cover"
+                                :src="info.path"
+                                alt="">
+                            <div
+                                class="file-name text-ellipsis"
+                                :title="info.name">
                                 {{ info.name }}
                             </div>
                         </div>
@@ -26,7 +39,9 @@
                 </div>
                 <div class="transform-type d-flex align-items-center">
                     <div>转换类型：</div>
-                    <el-select v-model="convertType" placeholder="Select">
+                    <el-select
+                        v-model="convertType"
+                        placeholder="Select">
                         <el-option
                             v-for="item in options"
                             :key="item.value"
@@ -35,7 +50,11 @@
                         />
                     </el-select>
                 </div>
-                <el-button type="primary" class="start-convert" :disabled="!fileInfo.length" @click="start">
+                <el-button
+                    type="primary"
+                    class="start-convert"
+                    :disabled="!fileInfo.length"
+                    @click="start">
                     开始转换
                 </el-button>
             </div>
@@ -79,12 +98,10 @@ const options = [
 const fileInfo = computed(() => {
     const files = store.files
     if (files) {
-        const data = files.paths.map((path, index) => {
-            return {
-                path,
-                name: files.names[index]
-            }
-        })
+        const data = files.paths.map((path, index) => ({
+            path,
+            name: files.names[index]
+        }))
         return data
     }
     return []

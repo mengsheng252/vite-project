@@ -1,6 +1,9 @@
 <!-- src/components/Message.vue -->
 <template>
-    <div v-if="visible" class="message" :class="[type]">
+    <div
+        v-if="visible"
+        class="message"
+        :class="[type]">
         {{ text }}
     </div>
 </template>

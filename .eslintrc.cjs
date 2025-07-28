@@ -1,5 +1,4 @@
 module.exports = {
-    root: true,
     env: {
         browser: true,
         es2021: true,
@@ -7,26 +6,24 @@ module.exports = {
     },
     extends: [
         'eslint:recommended',
-        'plugin:vue/vue3-recommended',
-        'plugin:prettier/recommended' // 必须放在最后
+        'plugin:vue/vue3-recommended'
     ],
-    parser: 'vue-eslint-parser',
+    overrides: [
+    ],
+    // 新的内容
     parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module'
+        ecmaVersion: 6,
+        sourceType: 'module',
+        ecmaFeatures: {
+            modules: true
+        },
+        requireConfigFile: false,
+        parser: '@babel/eslint-parser'
     },
+    plugins: [
+        'vue'
+    ],
     rules: {
-    // 自定义规则
-    // 'vue/multi-word-component-names': 'off',
-    // 'prettier/prettier': [
-    //   'error',
-    //   {
-    //     printWidth: 100,
-    //     semi: false,
-    //     singleQuote: true,
-    //     trailingComma: 'none'
-    //   }
-    // ]
         'semi': ['warn', 'never'], // 禁止尾部使用分号
         'no-console': 'off', // 禁止出现console
         'no-debugger': 'off', // 禁止出现debugger
@@ -78,8 +75,7 @@ module.exports = {
         'comma-spacing': ['error', { before: false, after: true }], // 要求逗号左边没有空格，右边有空格。
         'no-sequences': 'error', // 不允许使用逗号操作符
         'padded-blocks': ['error', 'never'], // 禁止块语句和类的开始或末尾有空行
-        'no-mixed-operators': [
-            // 禁止混合使用操作符
+        'no-mixed-operators': [ // 禁止混合使用操作符
             'error',
             {
                 groups: [
@@ -97,18 +93,8 @@ module.exports = {
         'vue/html-closing-bracket-spacing': 'error',
         'vue/multiline-html-element-content-newline': 'warn',
         'vue/singleline-html-element-content-newline': 'warn',
-        'vue/html-self-closing': [
-            'error',
-            { html: { void: 'never', normal: 'any', component: 'any' } }
-        ],
+        'vue/html-self-closing': ['error', { html: { void: 'never', normal: 'any', component: 'any' } }],
         'vue/no-v-html': 'off',
         'vue/prop-name-casing': ['error', 'camelCase']
-    },
-    overrides: [
-        {
-            files: ['*.js', '*.vue'],
-            parser: 'espree', // 使用 ESLint 默认 JS 解析器
-            rules: {}
-        }
-    ]
+    }
 }
