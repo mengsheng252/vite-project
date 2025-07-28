@@ -1,6 +1,8 @@
 @use '@/assets/css/reset.scss';
 
 .container {
+  width: 1200px !important;
+  min-width: 1200px !important;
   padding-top: 0;
   padding-right: 0;
   padding-bottom: 0;
@@ -15,4 +17,8 @@
 
 .upload-btn {
   margin: 24px 0 24px;
+}
+
+.el-menu{
+  border-right: none;
 }

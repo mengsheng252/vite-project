@@ -3,7 +3,7 @@ import { app, BrowserWindow, ipcMain, dialog } from 'electron'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { isImageFile } from './imageCheck.js'
-import { convertImage } from './imageMagick.js'
+import { changeSize, convertImage, getOutput } from './imageProcessing.js'
 import { ensureOutputDirExists, getDesktopPath, selectFolder, openFolder } from './output.js'
 import { saveImage } from './saveFile.js'
 
@@ -55,7 +55,7 @@ app.on('window-all-closed', () => {
 })
 
 // 打开文件选择窗口
-ipcMain.on('open-file-dialog', async (event,options) => {
+ipcMain.on('open-file-dialog', async (event, options) => {
   const result = await dialog.showOpenDialog(options)
   if (!result.canceled) {
     // 真实文件路径 & 过滤文件仅保留图片类型
@@ -102,4 +102,12 @@ ipcMain.on('open-folder', () => {
 // 添加保存图片的IPC处理
 ipcMain.handle('save-image', async (event, imageData) => {
   saveImage(imageData, storagePath)
+})
+
+ipcMain.on('change-image-size', (e, data) => {
+  if(!storagePath){
+    storagePath = getDesktopPath()
+  }
+  const outputPath = getOutput(data.filePath, storagePath)
+  changeSize(data.filePath, outputPath, data.size)
 })

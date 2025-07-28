@@ -1,33 +1,39 @@
 <template>
-    <div class="img-clip">
-        <div class="crop-container">
-            <!-- 底图 -->
-            <img id="imagePreview" :src="`file://${src.replace(/\\/g, '/')}`" @load="init">
-            <!-- <img id="imagePreview" src="@/assets/images/1.jpg" @load="init"> -->
-            <div class="crop-overlay">
-                <!-- 遮罩 -->
-                <div class="mask"></div>
-                <div id="cropArea" class="crop-area">
-                    <!-- 对照图片 -->
-                    <div class="warpper">
-                        <!-- <img id="compareImg" src="@/assets/images/1.jpg" alt=""> -->
-                        <img id="compareImg" :src="`file://${src.replace(/\\/g, '/')}`" alt="">
+    <div class="img-crop d-flex flex-column">
+        <div class="func-btn d-flex align-items-center">
+            <el-button type="primary" @click="crop">
+                裁剪
+            </el-button>
+            <el-button v-if="cropSrc" type="primary" @click="saveImage(cropSrc)">
+                下载
+            </el-button>
+        </div>
+        <div class="content-show d-flex justify-content-between">
+            <div class="crop-container d-flex justify-content-center align-items-center">
+                <!-- 底图 -->
+                <img id="imagePreview" :src="`file://${src.replace(/\\/g, '/')}`" @load="init">
+                <!-- <img id="imagePreview" src="@/assets/images/1.jpg" @load="init"> -->
+                <div class="crop-overlay">
+                    <!-- 遮罩 -->
+                    <div class="mask"></div>
+                    <div id="cropArea" class="crop-area">
+                        <!-- 对照图片 -->
+                        <div class="warpper">
+                            <!-- <img id="compareImg" src="@/assets/images/1.jpg" alt=""> -->
+                            <img id="compareImg" :src="`file://${src.replace(/\\/g, '/')}`" alt="">
+                        </div>
+                        <div id="handleTL" class="crop-handle"></div>
+                        <div id="handleTR" class="crop-handle"></div>
+                        <div id="handleBL" class="crop-handle"></div>
+                        <div id="handleBR" class="crop-handle"></div>
                     </div>
-                    <div id="handleTL" class="crop-handle"></div>
-                    <div id="handleTR" class="crop-handle"></div>
-                    <div id="handleBL" class="crop-handle"></div>
-                    <div id="handleBR" class="crop-handle"></div>
                 </div>
             </div>
+            <div class="show-crop-image d-flex justify-content-center align-items-center">
+                <canvas id="cropCanvas"></canvas>
+                <img v-if="cropSrc" id="cropResult" :src="cropSrc" alt="裁剪结果">
+            </div>
         </div>
-        <el-button type="primary" @click="crop">
-            裁剪
-        </el-button>
-        <el-button v-if="cropSrc" type="primary" @click="saveImage(cropSrc)">
-            下载
-        </el-button>
-        <canvas id="cropCanvas" style="display: none"></canvas>
-        <img v-if="cropSrc" id="cropResult" :src="cropSrc" alt="裁剪结果">
     </div>
 </template>
 
@@ -85,7 +91,7 @@ function mousemove(e) {
     // 四个手柄是根据裁剪区域定位四个角落，所以只需要更新裁剪区域即可
     // 50为控制最小裁剪区域
     if (activeHandle === handles.tl) {
-        // 左上角手柄
+    // 左上角手柄
         if (cropRect.width - dx >= 50 && cropRect.x + dx >= 0) {
             cropRect.x += dx
             cropRect.width -= dx
@@ -96,7 +102,7 @@ function mousemove(e) {
         }
     }
     if (activeHandle === handles.tr) {
-        // 右上角手柄  计算移动之后位置未超出限制区域才进行计算
+    // 右上角手柄  计算移动之后位置未超出限制区域才进行计算
         if (cropRect.width + dx >= 50 && cropRect.width + dx + cropRect.x <= imageRect.width) {
             cropRect.width += dx
         }
@@ -106,7 +112,7 @@ function mousemove(e) {
         }
     }
     if (activeHandle === handles.bl) {
-        // 左下角手柄
+    // 左下角手柄
         if (cropRect.width - dx >= 50 && cropRect.x + dx >= 0) {
             cropRect.x += dx
             cropRect.width -= dx
@@ -116,7 +122,7 @@ function mousemove(e) {
         }
     }
     if (activeHandle === handles.br) {
-        // 右下角手柄
+    // 右下角手柄
         if (cropRect.width + dx >= 50 && cropRect.width + dx + cropRect.x <= imageRect.width) {
             cropRect.width += dx
         }
@@ -152,15 +158,23 @@ function init() {
     compareImg = document.getElementById('compareImg')
     const image = document.getElementById('imagePreview')
     imageRect = image.getBoundingClientRect()
+    console.log('---imageRect', imageRect)
+
     cropRect = {
-        x: 0,
-        y: 0,
+        x: imageRect.width * 0.25,
+        y: imageRect.height * 0.25,
         width: imageRect.width * 0.5,
         height: imageRect.height * 0.5
     }
     // 设置对照图片的宽高和定位
     compareImg.style.width = `${imageRect.width}px`
     compareImg.style.height = `${imageRect.height}px`
+    // 设置裁剪区域crop-overlay的定位
+    const cropOverlay = document.getElementsByClassName('crop-overlay')[0]
+    cropOverlay.style.left = `${(540 - imageRect.width) / 2}px`
+    cropOverlay.style.top = `${(540 - imageRect.height) / 2}px`
+    cropOverlay.style.width = `${imageRect.width}px`
+    cropOverlay.style.height = `${imageRect.height}px`
     // 获取四个手柄,添加监听事件
     handles = {
         tl: document.getElementById('handleTL'),
@@ -222,21 +236,30 @@ function crop() {
     // 返回Base64数据
     cropSrc.value = canvas.toDataURL('image/jpeg', 0.92)
 }
+
+defineExpose({ crop, cropSrc })
 </script>
 
 <style lang="scss" scoped>
 svg {
   vertical-align: unset;
 }
-.img-clip {
+.img-crop {
+    row-gap: 24px;
   .crop-container {
+    width: 540px;
+    height: 540px;
     position: relative;
     display: inline-block;
-    margin: 20px;
+  }
+
+  .func-btn {
+    column-gap: 24px;
   }
 
   #imagePreview {
     max-width: 100%;
+    max-height: 100%;
     display: block;
     user-select: none;
   }
@@ -282,14 +305,14 @@ svg {
     box-sizing: border-box;
     z-index: 10;
     cursor: move;
-    .warpper{
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        overflow: hidden;
-        pointer-events: none;
+    .warpper {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      overflow: hidden;
+      pointer-events: none;
     }
   }
 
@@ -328,9 +351,19 @@ svg {
     transform: translate(50%, 50%);
   }
 
-  #cropResult {
-    margin-top: 20px;
-    max-width: 100%;
+  #cropCanvas {
+    display: none;
+  }
+
+  .show-crop-image {
+    width: 540px;
+    height: 540px;
+    #cropResult {
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+      background-color: #ccc;
+    }
   }
 }
 </style>

@@ -1,12 +1,14 @@
 <template>
     <div v-loading="loading" class="image-convert p-3">
+        <Storage></Storage>
         <div class="container d-flex flex-column">
-            <el-button type="primary" class="upload-btn" @click="uploadImage">
+            <!-- <el-button type="primary" class="upload-btn" @click="uploadImage">
                 <div>上传图片</div>
                 <el-icon class="el-icon--right">
                     <Upload />
                 </el-icon>
-            </el-button>
+            </el-button> -->
+            <FileUpload></FileUpload>
             <div class="transform d-flex flex-column">
                 <div class="show-files">
                     <div>文件列表：</div>
@@ -43,8 +45,13 @@
 
 <script setup>
 import { ElMessage } from 'element-plus'
-import { onMounted, ref } from 'vue'
-import { convertImage, uploadImage } from '@/hooks/useCommon'
+import { computed, ref } from 'vue'
+import FileUpload from '@/components/FileUpload.vue'
+import Storage from '@/components/Storage.vue'
+import { useStore } from '@/hooks/stores'
+import { convertImage } from '@/hooks/useCommon'
+
+const store = useStore()
 
 const loading = ref(false)
 
@@ -66,14 +73,22 @@ const options = [
     {
         value: 'webp',
         label: 'webp'
-    },
-    {
-        value: 'bmp',
-        label: 'bmp'
     }
 ]
 
-const fileInfo = ref([])
+const fileInfo = computed(() => {
+    const files = store.files
+    if (files) {
+        const data = files.paths.map((path, index) => {
+            return {
+                path,
+                name: files.names[index]
+            }
+        })
+        return data
+    }
+    return []
+})
 
 async function start() {
     loading.value = true
@@ -96,18 +111,18 @@ function removeFile(index) {
     fileInfo.value.splice(index, 1)
 }
 
-onMounted(async () => {
-    // 监听主进程窗口选择的文件列表
-    window.electronAPI.onFileSelected(async (info) => {
-        const data = info.paths.map((path, index) => {
-            return {
-                path,
-                name: info.names[index]
-            }
-        })
-        fileInfo.value.push(...data)
-    })
-})
+// onMounted(async () => {
+//     // 监听主进程窗口选择的文件列表
+//     window.electronAPI.onFileSelected(async (info) => {
+//         const data = info.paths.map((path, index) => {
+//             return {
+//                 path,
+//                 name: info.names[index]
+//             }
+//         })
+//         fileInfo.value.push(...data)
+//     })
+// })
 </script>
 
 <style lang="scss" scoped>

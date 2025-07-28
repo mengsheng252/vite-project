@@ -1,5 +1,6 @@
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import ElementPlus from 'element-plus'
+import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 // 全局消息组件
 import Message from '@/components/Message.vue'
@@ -20,6 +21,9 @@ window.$message = messageInstance
 
 const app = createApp(App)
 app.use(router)
+
+const pinia = createPinia()
+app.use(pinia)
 
 app.config.globalProperties.$message = messageInstance
 

@@ -1,14 +1,24 @@
 <template>
-    <el-config-provider>
+    <!-- <el-config-provider>
         <AppHeader></AppHeader>
-        <Storage></Storage>
-        <routerView></routerView>
-    </el-config-provider>
+        <routerView :key="$route.fullPath"></routerView>
+    </el-config-provider> -->
+
+    <el-container>
+        <el-aside width="180px">
+            <AppAside></AppAside>
+        </el-aside>
+        <el-container>
+            <el-header>Header</el-header>
+            <el-main>
+                <routerView :key="$route.fullPath"></routerView>
+            </el-main>
+        </el-container>
+    </el-container>
 </template>
 
 <script setup>
-import AppHeader from '@/components/AppHeader.vue'
-import Storage from '@/components/Storage.vue'
+import AppAside from './components/AppAside.vue'
 </script>
 
 <style scoped>
@@ -18,4 +28,9 @@ import Storage from '@/components/Storage.vue'
   right: 0;
   left: 0;
 } */
+
+ .el-aside{
+  height: 100vh;
+  overflow-y: scroll;
+ }
 </style>

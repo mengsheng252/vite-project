@@ -5,7 +5,7 @@ const router = createRouter({
     routes: [
         {
             path: '/',
-            redirect: '/imageConvert'
+            redirect: '/imageClip'
         },
         {
             path: '/home',
@@ -13,21 +13,26 @@ const router = createRouter({
             component: () => import('@/views/home.vue')
         },
         {
-            path: '/imageConvert',
-            name: 'ImageConvert',
-            component: () => import('@/views/imageConvert/index.vue'),
-            children: [
-                {
-                    path: 'index',
-                    name: 'index',
-                    component: () => import('@/views/imageConvert/index.vue')
-                }
-            ]
-        },
-        {
             path: '/imageClip',
             name: 'ImageClip',
-            component: () => import('@/views/ImageClip.vue')
+            // component: () => import('@/views/imageClip/index.vue'),
+            children: [
+                {
+                    path: 'imageConvert',
+                    name: 'ImageConvert',
+                    component: () => import('@/views/imageClip/imageConvert.vue')
+                },
+                {
+                    path: 'imageCrop',
+                    name: 'ImageCrop',
+                    component: () => import('@/views/imageClip/imageCrop.vue')
+                },
+                {
+                    path: 'imageSize',
+                    name: 'ImageSize',
+                    component: () => import('@/views/imageClip/imageSize.vue')
+                }
+            ]
         }
     ]
 })
