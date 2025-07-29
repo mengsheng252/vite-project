@@ -14,8 +14,8 @@
                 src="@/assets/images/1.jpg"
                 @load="init">
             <!-- <img v-if="src" id="source" :src="`file://${src.replace(/\\/g, '/')}`" alt="" @load="init"> -->
-            <div class="func-size d-flex flex-column h-100">
-                <el-select
+            <div class="func-size d-flex flex-column h-100 mx-3">
+                <!-- <el-select
                     v-model="method"
                     placeholder="Select"
                     style="width: 240px">
@@ -25,7 +25,17 @@
                         :label="item.label"
                         :value="item.value"
                     />
-                </el-select>
+                </el-select> -->
+                <div class="methods d-flex justify-content-between">
+                    <el-button
+                        v-for="option, index in options"
+                        :key="option.value"
+                        :type="index + 1 === method ? 'primary' : ''"
+                        @click="method = option.value"
+                    >
+                        {{ option.label }}
+                    </el-button>
+                </div>
                 <div
                     v-if="method === 1"
                     class="size-select d-flex align-items-center">
@@ -80,13 +90,7 @@ import { useStore } from '@/hooks/stores'
 
 const store = useStore()
 
-const src = computed(() => {
-    const files = store.files
-    if (files) {
-        return files.paths[0]
-    }
-    return ''
-})
+const src = computed(() => store.file || '')
 
 const method = ref(1)
 
@@ -144,7 +148,7 @@ function save() {
     if (method.value === 1) {
         const { width, height } = actualSize.value
         window.electronAPI.changeImageSize({
-            filePath: src.value,
+            path: src.value,
             size: {
                 width: Number.parseInt(width * (ratio.value / 100)),
                 height: Number.parseInt(height * (ratio.value / 100))
@@ -153,7 +157,7 @@ function save() {
     }
     else if (method.value === 2) {
         const { width, height } = showSize.value
-        window.electronAPI.changeImageSize({ filePath: src.value, size: { width, height } })
+        window.electronAPI.changeImageSize({ path: src.value, size: { width, height } })
     }
 }
 
@@ -212,6 +216,9 @@ function handleShowHeight(val) {
                 .el-input{
                     width: 120px;
                 }
+            }
+            .methods{
+                min-width: 240px;
             }
         }
     }

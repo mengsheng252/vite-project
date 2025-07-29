@@ -1,86 +1,128 @@
 <template>
-    <div class="image-clip p-3">
-        <div class="container">
-            <!-- <el-tabs type="border-card" @tab-click="handleTabClick">
-                <el-tab-pane label="格式转换" name="imageConvert">
-                    <image-convert></image-convert>
-                </el-tab-pane>
-                <el-tab-pane label="裁剪" name="imageCrop">
-                    <image-crop></image-crop>
-                </el-tab-pane>
-                <el-tab-pane label="调整大小">
-                    <image-size></image-size>
-                </el-tab-pane>
-                <el-tab-pane label="旋转/翻转">
-                    顺时针旋转/垂直翻转
-                </el-tab-pane>
-                <el-tab-pane label="质量压缩">
-                    JPEG质量调整(1-100)
-                </el-tab-pane>
-                <el-tab-pane label="锐化/模糊">
-                    高斯模糊/锐化
-                </el-tab-pane>
-                <el-tab-pane label="色彩调整">
-                    亮度，对比度
-                </el-tab-pane>
-                <el-tab-pane label="去除噪点">
-                    减少杂色噪点
-                </el-tab-pane>
-                <el-tab-pane label="添加水印">
-                    添加水印
-                </el-tab-pane>
-                <el-tab-pane label="边缘检测">
-                    突出图像边缘
-                </el-tab-pane>
-                <el-tab-pane label="油画效果">
-                    模拟油画笔触
-                </el-tab-pane>
-                <el-tab-pane label="生成缩略图">
-                    生成缩略图
-                </el-tab-pane>
-                <el-tab-pane label="图片拼接">
-                    水平拼接多张图片
-                </el-tab-pane>
-                <el-tab-pane label="添加边框">
-                    添加10像素红色边框
-                </el-tab-pane>
-                <el-tab-pane label="混合图片">
-                    叠加混合模式
-                </el-tab-pane>
-                <el-tab-pane label="识别图像信息">
-                    查看详细EXIF/色彩空间等信息
-                </el-tab-pane>
-            </el-tabs> -->
-            <div>1111111111111111</div>
+    <div class="image-clip p-3 pt-5">
+        <div
+            v-if="showMenu"
+            class="content d-flex flex-wrap gap-3 row-gap-2">
+            <div
+                v-for="menu in menus"
+                :key="menu.name"
+                class="menu p-2 shadow-sm"
+                @click="handleClick(menu.name)"
+            >
+                <div class="menu-header title">
+                    {{ menu.label }}
+                </div>
+                <div class="menu-body">
+                    ...
+                </div>
+            </div>
         </div>
+        <router-view></router-view>
     </div>
 </template>
 
 <script setup>
-// import { onMounted, ref } from 'vue'
-// import { useStore } from '@/hooks/stores'
-// import imageConvert from './imageConvert/index.vue'
-// import imageCrop from './imageCrop/index.vue'
-// import imageSize from './imageSize.vue'
+import { computed, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useStore } from '../../hooks/stores'
 
-// const loading = ref(false)
+const store = useStore()
 
-// const src = ref('')
+const menus = [
+    {
+        label: '格式转换',
+        name: 'ImageConvert',
+    },
+    {
+        label: '裁剪',
+        name: 'ImageCrop',
+    },
+    {
+        label: '调整大小',
+        name: 'ImageSize'
+    },
+    {
+        label: '旋转/翻转',
+        name: 'ImageFlip'
+    },
+    {
+        label: '质量压缩',
+        name: 'ImageCompress'
+    },
+    {
+        label: '锐化/模糊',
+        name: 'ImageSharpening'
+    },
+    {
+        label: '色彩调整',
+        name: 'ImageConvert'
+    },
+    {
+        label: '去除噪点',
+        name: 'ImageConvert'
+    },
+    {
+        label: '添加水印',
+        name: 'ImageConvert'
+    },
+    {
+        label: '边缘检测',
+        name: 'ImageConvert'
+    },
+    {
+        label: '油画效果',
+        name: 'ImageConvert'
+    },
+    {
+        label: '生成缩略图',
+        name: 'ImageConvert'
+    },
+    {
+        label: '图片拼接',
+        name: 'ImageConvert'
+    },
+    {
+        label: '添加边框',
+        name: 'ImageConvert'
+    },
+    {
+        label: '混合图片',
+        name: 'ImageConvert'
+    },
+    {
+        label: '识别图像信息',
+        name: 'ImageConvert'
+    }
+]
 
-// function handleTabClick(tab) {
-//     useStore().setActiveTab(tab.paneName)
-// }
+const curPath = ref('')
 
-// onMounted(() => {
-//     // 监听主进程窗口选择的文件列表
-//     window.electronAPI.onFileSelected((info) => {
-//         src.value = info.paths[0]
-//     })
-// })
+const route = useRoute()
+const router = useRouter()
+
+const showMenu = computed(() => route.name === 'ImageClip')
+
+function handleClick(name) {
+    store.reset()
+    curPath.value = name
+    router.push({ name })
+}
 </script>
 
 <style lang="scss" scoped>
 .image-clip{
     user-select: none;
+    .content{
+        .menu{
+            min-width: 160px;
+            width: 160px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            &:hover{
+                border-color: pink;
+            }
+        }
+    }
 }
 </style>

@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url'
 // const { app, BrowserWindow } = require('electron')
 import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import { isImageFile } from './imageCheck.js'
-import { changeSize, convertImage, getOutput } from './imageProcessing.js'
+import { changeSize, convertImage, getOutput, imageFlip } from './imageProcessing.js'
 import { ensureOutputDirExists, getDesktopPath, openFolder, selectFolder } from './output.js'
 import { saveImage } from './saveFile.js'
 
@@ -28,16 +28,16 @@ function createWindow() {
     })
 
     mainWin.loadFile(path.join(__dirname, './index.html'))
-    mainWin.loadURL('http://localhost:5173', {
-        extraFiles: [
-            'node_modules/element-plus/dist/**/*' // 打包时包含 Element 样式
-        ]
-    })
-    // mainWin.loadFile(path.join(__dirname, '../dist/index.html'), {
-    //   extraFiles: [
-    //     'node_modules/element-plus/dist/**/*' // 打包时包含 Element 样式
-    //   ]
+    // mainWin.loadURL('http://localhost:5173', {
+    //     extraFiles: [
+    //         'node_modules/element-plus/dist/**/*' // 打包时包含 Element 样式
+    //     ]
     // })
+    mainWin.loadFile(path.join(__dirname, '../dist/index.html'), {
+      extraFiles: [
+        'node_modules/element-plus/dist/**/*' // 打包时包含 Element 样式
+      ]
+    })
     mainWin.webContents.openDevTools()
 }
 
@@ -72,13 +72,13 @@ ipcMain.on('open-file-dialog', async (event, options) => {
 })
 
 // 接收图片转换事件
-ipcMain.handle('handle-image-convert', async (event, info) => {
+ipcMain.handle('handle-image-convert', async (event, options) => {
     // 解析文件路径
-    const parsedPath = path.parse(info.filePath)
+    const parsedPath = path.parse(options.filePath)
     // 获取文件名（不包括后缀）
     const fileName = parsedPath.name
-    const outputPath = `${storagePath}\\${fileName}.${info.format}`
-    return await convertImage(info.filePath, outputPath, info.format)
+    const outputPath = `${storagePath}\\${fileName}.${options.format}`
+    return await convertImage(options.filePath, outputPath, options.format)
 })
 
 // 选择文件夹
@@ -99,14 +99,23 @@ ipcMain.on('open-folder', () => {
 })
 
 // 添加保存图片的IPC处理
-ipcMain.handle('save-image', async (event, imageData) => {
-    saveImage(imageData, storagePath)
+ipcMain.handle('save-image', async (event, options) => {
+    saveImage(options, storagePath)
 })
 
-ipcMain.on('change-image-size', (e, data) => {
+ipcMain.on('change-image-size', (e, options) => {
     if (!storagePath) {
         storagePath = getDesktopPath()
     }
-    const outputPath = getOutput(data.filePath, storagePath)
-    changeSize(data.filePath, outputPath, data.size)
+    const outputPath = getOutput(options.path, storagePath)
+    changeSize(options.path, outputPath, options.size)
+})
+
+
+ipcMain.on('image-flip', (e, options)=>{
+    if (!storagePath) {
+        storagePath = getDesktopPath()
+    }
+    const outputPath = getOutput(options.path, storagePath)
+    imageFlip(options.path, outputPath, options)
 })

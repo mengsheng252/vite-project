@@ -65,3 +65,18 @@ export function getOutput(filePath, storagePath) {
     const outputPath = `${storagePath}\\${fileName}.${format}`
     return outputPath
 }
+
+
+/**
+ * 图片翻转+旋转
+ * @param {*} filePath
+ * @param {*} outputPath
+ * @param {*} options
+ */
+export async function imageFlip(filePath, outputPath, options){
+      await sharp(filePath)
+    .flip(options.flipY)
+    .flop(options.flipX)
+    .rotate(options.rotate)
+    .toFile(outputPath)
+}

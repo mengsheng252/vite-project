@@ -10,7 +10,7 @@
                     <Upload />
                 </el-icon>
             </el-button> -->
-            <FileUpload></FileUpload>
+            <FileUpload :multiple="true"></FileUpload>
             <div class="transform d-flex flex-column">
                 <div class="show-files">
                     <div>文件列表：</div>
@@ -95,17 +95,7 @@ const options = [
     }
 ]
 
-const fileInfo = computed(() => {
-    const files = store.files
-    if (files) {
-        const data = files.paths.map((path, index) => ({
-            path,
-            name: files.names[index]
-        }))
-        return data
-    }
-    return []
-})
+const fileInfo = computed(() => store.files || [])
 
 async function start() {
     loading.value = true

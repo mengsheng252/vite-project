@@ -16,12 +16,33 @@
 import { onMounted } from 'vue'
 import { useStore } from '@/hooks/stores'
 
+const props = defineProps({
+    multiple: {
+        type: Boolean,
+        default: false
+    }
+})
+
+// 选择文件参数配置
+const openImageOptions = {
+    title: '选择文件',
+    properties: ['openFile', 'multiSelections'],
+    filters: [
+        { name: 'Images', extensions: ['jpg', 'png'] }
+        // { name: 'All Files', extensions: ['*'] }
+    ]
+}
+
 /**
  * 主进程打开选择文件窗口
  */
 async function uploadImage() {
+    const options = openImageOptions
+    if (!props.multiple) {
+        options.properties = ['openFile']
+    }
     // 通知主进程打开文件对话框
-    window.electronAPI.openFileDialog()
+    window.electronAPI.openFileDialog(options)
 }
 
 onMounted(() => {

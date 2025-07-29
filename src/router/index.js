@@ -15,7 +15,7 @@ const router = createRouter({
         {
             path: '/imageClip',
             name: 'ImageClip',
-            // component: () => import('@/views/imageClip/index.vue'),
+            component: () => import('@/views/imageClip/index.vue'),
             children: [
                 {
                     path: 'imageConvert',
@@ -31,8 +31,18 @@ const router = createRouter({
                     path: 'imageSize',
                     name: 'ImageSize',
                     component: () => import('@/views/imageClip/imageSize.vue')
+                },
+                {
+                    path: 'imageFlip',
+                    name: 'ImageFlip',
+                    component: () => import('@/views/imageClip/imageFlip.vue')
                 }
             ]
+        },
+        {
+            path: '/videoClip',
+            name: 'VideoClip',
+            component: () => import('@/views/videoClip/index.vue'),
         }
     ]
 })

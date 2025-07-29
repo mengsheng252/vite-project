@@ -183,8 +183,6 @@ function init() {
     compareImg = document.getElementById('compareImg')
     const image = document.getElementById('imagePreview')
     imageRect = image.getBoundingClientRect()
-    console.log('---imageRect', imageRect)
-
     cropRect = {
         x: imageRect.width * 0.25,
         y: imageRect.height * 0.25,

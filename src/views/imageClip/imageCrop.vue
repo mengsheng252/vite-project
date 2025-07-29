@@ -24,16 +24,19 @@ import imgCrop from '@/components/imgCrop.vue'
 import { useStore } from '@/hooks/stores'
 
 const loading = ref(false)
+const store = useStore()
 
 // const src = ref('')
 
-const src = computed(() => {
-    const files = useStore().files
-    if (files) {
-        return files.paths[0]
-    }
-    return ''
-})
+// const src = computed(() => {
+//     const files = useStore().files
+//     if (files) {
+//         return files.paths[0]
+//     }
+//     return ''
+// })
+
+const src = computed(() => store.file || '')
 
 /**
  * 主进程打开选择文件窗口

@@ -87,7 +87,6 @@ export function isImageByLoading(file) {
             }
             img.onerror = () => {
                 URL.revokeObjectURL(url)
-                console.log('image load error')
                 resolve(false)
             }
         }

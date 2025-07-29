@@ -19,10 +19,6 @@
   margin: 24px 0 24px;
 }
 
-.el-menu{
-  border-right: none;
-}
-
 /*滚动条整体样式*/
 ::-webkit-scrollbar {
     width: 6px;
@@ -39,12 +35,7 @@
     background: transparent;
 }
 
-/* 方法1：禁用滚动条 */
-body {
-  overflow: hidden; /* 禁用所有滚动 */
+.title{
+    font-weight: 600;
+    color: rgba($color: #000000, $alpha: .7);
 }
-
-/* 方法2：仅隐藏滚动条但保留滚动功能 */
-// ::-webkit-scrollbar {
-//     display: none;
-// }

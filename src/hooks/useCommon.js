@@ -26,13 +26,13 @@ export function uploadImage({ multiple }) {
 
 /**
  * 图片转换
- * @param {*} filePath
+ * @param {*} path
  * @param {*} format
  * @returns Promise
  */
-export async function convertImage(filePath, format) {
+export async function convertImage(path, format) {
     // electron环境才能获取file对象的path属性
-    return window.electronAPI.handleImageConvert({ filePath, format })
+    return window.electronAPI.handleImageConvert({ path, format })
 }
 
 /**

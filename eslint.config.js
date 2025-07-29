@@ -23,7 +23,8 @@ export default antfu({
         'indent': ['error', 4], // 使用四个空格进行缩进
         'eqeqeq': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
         'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-        'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+        'no-console': 'off',
+        // 'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
         'camelcase': 'warn',
         'arrow-body-style': ['error', 'as-needed'],
         'generator-star-spacing': 0, // allow async-await
