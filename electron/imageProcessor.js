@@ -1,6 +1,8 @@
 import path from 'node:path'
 // const sharp = require('sharp');
 import sharp from 'sharp'
+// import MessageManager from "./message-manager.js"
+import { BrowserWindow } from 'electron'
 
 /**
  * 图片格式转换
@@ -10,19 +12,27 @@ import sharp from 'sharp'
  * @returns
  */
 export async function convertImage(inputPath, outputPath, format) {
-    return new Promise((resolve, reject) => {
+    new Promise((resolve, reject) => {
         sharp(inputPath)
             .toFormat(format)
             .toFile(outputPath, (err, info) => {
                 if (err) {
                     console.error('Error occurred:', err)
-                    reject(err)
-                    process.exit(1)
+                    // process.exit(1)
+                    sendMsgToRender({
+                        name: 'imageConvert',
+                        status: 'error',
+                        errFile: inputPath
+                    })
                 }
                 else {
                     console.log('Image saved to:', outputPath)
                     console.log('Image info:', info)
-                    resolve(true)
+                    sendMsgToRender({
+                        name: 'imageConvert',
+                        status: 'success',
+                        errFile: null
+                    })
                 }
             })
     })
@@ -42,10 +52,19 @@ export async function changeSize(inputPath, outputPath, size) {
             .toFile(outputPath)
             .then(() => {
                 console.log(' changeSize success ', outputPath)
-                resolve(true)
+                sendMsgToRender({
+                    name: 'changeSize',
+                    status: 'success',
+                    errFile: null
+                })
             })
             .catch((err) => {
-                reject(err)
+                // reject(err)
+                sendMsgToRender({
+                    name: 'changeSize',
+                    status: 'error',
+                    errFile: inputPath
+                })
             })
     })
 }
@@ -73,10 +92,32 @@ export function getOutput(filePath, storagePath) {
  * @param {*} outputPath
  * @param {*} options
  */
-export async function imageFlip(filePath, outputPath, options){
-      await sharp(filePath)
-    .flip(options.flipY)
-    .flop(options.flipX)
-    .rotate(options.rotate)
-    .toFile(outputPath)
+export async function imageFlip(filePath, outputPath, options) {
+    await sharp(filePath)
+        .flip(options.flipY)
+        .flop(options.flipX)
+        .rotate(options.rotate)
+        .toFile(outputPath)
+        .then(() => {
+            sendMsgToRender({
+                name: 'imageFlip',
+                status: 'success',
+                errFile: null
+            })
+        }).catch(() => {
+            sendMsgToRender({
+                name: 'imageFlip',
+                status: 'error',
+                errFile: filePath
+            })
+        })
+}
+
+/**
+ * 图片处理结果-统一返回消息给渲染进程
+ * @param {*} args {name, status, errFile}
+ */
+function sendMsgToRender(args) {
+    const focusedWindow = BrowserWindow.getFocusedWindow();
+    focusedWindow.webContents.send('image-process', args)
 }

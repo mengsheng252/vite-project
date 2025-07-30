@@ -3,17 +3,19 @@ import { fileURLToPath } from 'node:url'
 // const { app, BrowserWindow } = require('electron')
 import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import { isImageFile } from './imageCheck.js'
-import { changeSize, convertImage, getOutput, imageFlip } from './imageProcessing.js'
+import { changeSize, convertImage, getOutput, imageFlip } from './imageProcessor.js'
 import { ensureOutputDirExists, getDesktopPath, openFolder, selectFolder } from './output.js'
 import { saveImage } from './saveFile.js'
 
 let storagePath = ''
 
+let mainWin = null
+
 // 获取当前文件目录
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 function createWindow() {
-    const mainWin = new BrowserWindow({
+    mainWin = new BrowserWindow({
         width: 1000,
         height: 800,
         webPreferences: {
@@ -34,9 +36,9 @@ function createWindow() {
     //     ]
     // })
     mainWin.loadFile(path.join(__dirname, '../dist/index.html'), {
-      extraFiles: [
-        'node_modules/element-plus/dist/**/*' // 打包时包含 Element 样式
-      ]
+        extraFiles: [
+            'node_modules/element-plus/dist/**/*' // 打包时包含 Element 样式
+        ]
     })
     mainWin.webContents.openDevTools()
 }
@@ -57,7 +59,7 @@ app.on('window-all-closed', () => {
 ipcMain.on('open-file-dialog', async (event, options) => {
     const result = await dialog.showOpenDialog(options)
     if (!result.canceled) {
-    // 真实文件路径 & 过滤文件仅保留图片类型
+        // 真实文件路径 & 过滤文件仅保留图片类型
         const filePaths = result.filePaths.filter(filePath =>
             isImageFile(filePath) // 使用上面定义的任意判断方法
         )
@@ -72,13 +74,13 @@ ipcMain.on('open-file-dialog', async (event, options) => {
 })
 
 // 接收图片转换事件
-ipcMain.handle('handle-image-convert', async (event, options) => {
+ipcMain.on('handle-image-convert', async (event, options) => {
     // 解析文件路径
-    const parsedPath = path.parse(options.filePath)
+    const parsedPath = path.parse(options.path)
     // 获取文件名（不包括后缀）
     const fileName = parsedPath.name
     const outputPath = `${storagePath}\\${fileName}.${options.format}`
-    return await convertImage(options.filePath, outputPath, options.format)
+    await convertImage(options.path, outputPath, options.format)
 })
 
 // 选择文件夹
@@ -112,7 +114,7 @@ ipcMain.on('change-image-size', (e, options) => {
 })
 
 
-ipcMain.on('image-flip', (e, options)=>{
+ipcMain.on('image-flip', (e, options) => {
     if (!storagePath) {
         storagePath = getDesktopPath()
     }

@@ -1,5 +1,5 @@
 <template>
-    <div class="image-clip p-3 pt-5">
+    <div class="image-clip p-3">
         <div
             v-if="showMenu"
             class="content d-flex flex-wrap gap-3 row-gap-2">
@@ -22,7 +22,8 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { ElMessage } from 'element-plus'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '../../hooks/stores'
 
@@ -95,6 +96,8 @@ const menus = [
     }
 ]
 
+let ipcListener = null
+
 const curPath = ref('')
 
 const route = useRoute()
@@ -107,6 +110,32 @@ function handleClick(name) {
     curPath.value = name
     router.push({ name })
 }
+
+onMounted(() => {
+    ipcListener = window.electronAPI.imageProcessResult((res) => {
+        console.log('imageProcessResultt', res)
+        // 计算处理结束的图片数量
+        store.convertCount++
+        // 接收处理失败的文件
+        if (res.errFile) {
+            store.errFiles.push(res.errFile)
+        }
+        if (store.convertCount === store.files.length) {
+            if (store.convertCount === 1 && store.errFiles.length === 1) {
+                ElMessage.success('图片处理失败')
+            }
+            else {
+                ElMessage.success('图片处理结束')
+            }
+        }
+    })
+})
+
+onBeforeUnmount(() => {
+    if (ipcListener) {
+        ipcListener()
+    }
+})
 </script>
 
 <style lang="scss" scoped>

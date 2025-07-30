@@ -4,13 +4,13 @@ const handlers = new Set() // 存储所有回调函数
 
 contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer: {
-    // 单向通信：只发送消息到主进程，不等待响应，无返回值
+        // 单向通信：只发送消息到主进程，不等待响应，无返回值
         send: (...args) => ipcRenderer.send(...args),
         on: (...args) => ipcRenderer.on(...args),
         // 双向通信：发送消息到主进程并等待响应，返回promise
         invoke: (...args) => ipcRenderer.invoke(...args)
-    // 可以根据需要暴露更多方法
-    // getFilePath: (file) => ipcRenderer.invoke('get-file-path', file.path)
+        // 可以根据需要暴露更多方法
+        // getFilePath: (file) => ipcRenderer.invoke('get-file-path', file.path)
     },
     getDesktopPath: () => ipcRenderer.invoke('get-desktop-path'),
     openFileDialog: options => ipcRenderer.send('open-file-dialog', options),
@@ -23,10 +23,18 @@ contextBridge.exposeInMainWorld('electronAPI', {
             ipcRenderer.off('file-selected', handler)
         }
     },
-    handleImageConvert: options => ipcRenderer.invoke('handle-image-convert', options),
+    handleImageConvert: options => ipcRenderer.send('handle-image-convert', options),
     handlePath: () => ipcRenderer.invoke('select-output-path'),
     openFolder: () => ipcRenderer.send('open-folder'),
     saveImage: options => ipcRenderer.invoke('save-image', options),
     changeImageSize: options => ipcRenderer.send('change-image-size', options),
-    handleImageFlip: options => ipcRenderer.send('image-flip', options)
+    handleImageFlip: options => ipcRenderer.send('image-flip', options),
+    imageProcessResult: (callback) => {
+        const handler = (event, options) => callback(options)
+        ipcRenderer.on('image-process', handler)
+        // 返回一个移除监听器的函数
+        return () => {
+            ipcRenderer.off('image-process', handler)
+        }
+    },
 })

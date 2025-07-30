@@ -57,7 +57,6 @@
 </template>
 
 <script setup>
-import { ElMessage } from 'element-plus'
 import { computed, ref, watch } from 'vue'
 import FileUpload from '@/components/FileUpload.vue'
 import { useStore } from '@/hooks/stores'
@@ -86,7 +85,6 @@ function getImageStyle(img) {
         transforms.push('scaleY(-1)')
     if (img.rotate !== 0)
         transforms.push(`rotate(${img.rotate}deg)`)
-
     return {
         transform: transforms.join(' '),
         transition: 'transform 0.3s ease'
@@ -95,20 +93,9 @@ function getImageStyle(img) {
 
 function save() {
     const saveFiles = files.value.map((file, index) => Object.assign({}, { ...file }, { ...options.value[index] }))
-    try {
-        saveFiles.map((file) => {
-            window.electronAPI.handleImageFlip(file)
-        })
-    }
-    catch (error) {
-        console.log('error', error)
-    }
-    finally {
-        ElMessage({
-            message: '保存成功',
-            type: 'success'
-        })
-    }
+    saveFiles.map((file) => {
+        window.electronAPI.handleImageFlip(file)
+    })
 }
 </script>
 

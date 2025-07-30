@@ -9,23 +9,17 @@
         <div
             v-if="src"
             class="content d-flex align-items-start">
-            <img
+            <!-- <img
                 id="source"
                 src="@/assets/images/1.jpg"
+                @load="init"> -->
+            <img
+                v-if="src"
+                id="source"
+                :src="`file://${src.replace(/\\/g, '/')}`"
+                alt=""
                 @load="init">
-            <!-- <img v-if="src" id="source" :src="`file://${src.replace(/\\/g, '/')}`" alt="" @load="init"> -->
             <div class="func-size d-flex flex-column h-100 mx-3">
-                <!-- <el-select
-                    v-model="method"
-                    placeholder="Select"
-                    style="width: 240px">
-                    <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                    />
-                </el-select> -->
                 <div class="methods d-flex justify-content-between">
                     <el-button
                         v-for="option, index in options"
@@ -73,11 +67,14 @@
                 </el-button>
             </div>
             <div class="result d-flex justify-content-center align-items-center">
-                <img
+                <!-- <img
                     v-if="method === 1"
                     id="target"
-                    src="@/assets/images/1.jpg">
-                <!-- <img v-if="src && method === 1" id="target" :src="`file://${src.replace(/\\/g, '/')}`"> -->
+                    src="@/assets/images/1.jpg"> -->
+                <img
+                    v-if="src && method === 1"
+                    id="target"
+                    :src="`file://${src.replace(/\\/g, '/')}`">
             </div>
         </div>
     </div>

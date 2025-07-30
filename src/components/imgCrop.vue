@@ -9,7 +9,8 @@
             <el-button
                 v-if="cropSrc"
                 type="primary"
-                @click="saveImage(cropSrc)">
+                @click="saveImage(cropSrc)"
+            >
                 下载
             </el-button>
         </div>
@@ -56,7 +57,8 @@
                     v-if="cropSrc"
                     id="cropResult"
                     :src="cropSrc"
-                    alt="裁剪结果">
+                    alt="裁剪结果"
+                >
             </div>
         </div>
     </div>

@@ -1,5 +1,6 @@
 <template>
     <div class="file-upload mt-3 mb-3">
+        <Storage></Storage>
         <el-button
             type="primary"
             class="upload-btn"
@@ -15,6 +16,7 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useStore } from '@/hooks/stores'
+import Storage from './Storage.vue'
 
 const props = defineProps({
     multiple: {

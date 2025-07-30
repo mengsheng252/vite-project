@@ -1,15 +1,9 @@
 <template>
     <div
         v-loading="loading"
-        class="image-convert p-3">
-        <Storage></Storage>
+        class="image-convert p-3"
+    >
         <div class="container d-flex flex-column">
-            <!-- <el-button type="primary" class="upload-btn" @click="uploadImage">
-                <div>上传图片</div>
-                <el-icon class="el-icon--right">
-                    <Upload />
-                </el-icon>
-            </el-button> -->
             <FileUpload :multiple="true"></FileUpload>
             <div class="transform d-flex flex-column">
                 <div class="show-files">
@@ -18,20 +12,30 @@
                         <div
                             v-for="info, index in fileInfo"
                             :key="info.name"
-                            class="file position-relative">
+                            class="file position-relative"
+                        >
+                            <div
+                                v-if="convertFail(info.path)"
+                                class="convert-fail position-absolute top-50 start-50"
+                            >
+                                处理失败
+                            </div>
                             <el-icon
                                 class="close-btn position-absolute"
                                 color="#409EFF"
-                                @click="removeFile(index)">
+                                @click="removeFile(index)"
+                            >
                                 <CircleCloseFilled />
                             </el-icon>
                             <img
                                 class="cover"
                                 :src="info.path"
-                                alt="">
+                                alt=""
+                            >
                             <div
                                 class="file-name text-ellipsis"
-                                :title="info.name">
+                                :title="info.name"
+                            >
                                 {{ info.name }}
                             </div>
                         </div>
@@ -41,7 +45,8 @@
                     <div>转换类型：</div>
                     <el-select
                         v-model="convertType"
-                        placeholder="Select">
+                        placeholder="Select"
+                    >
                         <el-option
                             v-for="item in options"
                             :key="item.value"
@@ -54,7 +59,8 @@
                     type="primary"
                     class="start-convert"
                     :disabled="!fileInfo.length"
-                    @click="start">
+                    @click="start"
+                >
                     开始转换
                 </el-button>
             </div>
@@ -63,10 +69,8 @@
 </template>
 
 <script setup>
-import { ElMessage } from 'element-plus'
 import { computed, ref } from 'vue'
 import FileUpload from '@/components/FileUpload.vue'
-import Storage from '@/components/Storage.vue'
 import { useStore } from '@/hooks/stores'
 import { convertImage } from '@/hooks/useCommon'
 
@@ -97,17 +101,18 @@ const options = [
 
 const fileInfo = computed(() => store.files || [])
 
+const errFiles = computed(() => store.errFiles)
+
+function convertFail(path) {
+    return errFiles.value.find(x => x === path)
+}
+
 async function start() {
     loading.value = true
     for await (const info of fileInfo.value) {
         await convertImage(info.path, convertType.value)
     }
-    // window.$message.success('转换结束')
     loading.value = false
-    ElMessage({
-        message: '转换结束',
-        type: 'success'
-    })
 }
 
 /**
@@ -115,21 +120,9 @@ async function start() {
  * @param index
  */
 function removeFile(index) {
+    store.convertImage = 0
     fileInfo.value.splice(index, 1)
 }
-
-// onMounted(async () => {
-//     // 监听主进程窗口选择的文件列表
-//     window.electronAPI.onFileSelected(async (info) => {
-//         const data = info.paths.map((path, index) => {
-//             return {
-//                 path,
-//                 name: info.names[index]
-//             }
-//         })
-//         fileInfo.value.push(...data)
-//     })
-// })
 </script>
 
 <style lang="scss" scoped>
@@ -150,6 +143,12 @@ function removeFile(index) {
         .file-list {
           column-gap: 12px;
           .file {
+            .convert-fail{
+                font-weight: 500;
+                font-size: 12px;
+                transform: translate(-50%,-50%);
+                color: rgba($color: red, $alpha: .8);
+            }
             .close-btn{
                 font-size: 24px;
                 top: -6px;

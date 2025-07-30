@@ -32,7 +32,7 @@ export function uploadImage({ multiple }) {
  */
 export async function convertImage(path, format) {
     // electron环境才能获取file对象的path属性
-    return window.electronAPI.handleImageConvert({ path, format })
+    window.electronAPI.handleImageConvert({ path, format })
 }
 
 /**

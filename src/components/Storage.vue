@@ -1,5 +1,5 @@
 <template>
-    <div class="storage p-3">
+    <div class="storage mb-3">
         <div class="sotrage-path d-flex align-items-center">
             <div class="path-label">
                 保存路径：
@@ -7,7 +7,8 @@
             <div
                 class="select-storage-path btn border border-primary text-ellipsis"
                 :title="storagePath"
-                @click="handlePath">
+                @click="handlePath"
+            >
                 {{ storagePath }}
             </div>
             <el-button
