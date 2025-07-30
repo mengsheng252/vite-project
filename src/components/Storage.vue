@@ -1,5 +1,5 @@
 <template>
-    <div class="storage mb-3">
+    <div class="storage">
         <div class="sotrage-path d-flex align-items-center">
             <div class="path-label">
                 保存路径：

@@ -1,10 +1,11 @@
 <template>
-    <div class="file-upload mt-3 mb-3">
+    <div class="file-upload">
         <Storage></Storage>
         <el-button
             type="primary"
             class="upload-btn"
-            @click="uploadImage">
+            @click="uploadImage"
+        >
             <div>上传图片</div>
             <el-icon class="el-icon--right">
                 <Upload />

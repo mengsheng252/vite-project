@@ -4,11 +4,49 @@
         class="image-convert p-3"
     >
         <div class="container d-flex flex-column">
-            <FileUpload :multiple="true"></FileUpload>
-            <div class="transform d-flex flex-column">
-                <div class="show-files">
-                    <div>文件列表：</div>
-                    <div class="file-list d-flex">
+            <!-- 标题区域 -->
+            <header class="text-center mb-5">
+                <h1 class="display-5 fw-bold text-dark mb-3">
+                    图片格式转换处理
+                </h1>
+                <p class="text-muted col-md-8 mx-auto">
+                    通过sharp库实现图片格式转换，支持png,jpg,hpeg,webp等
+                </p>
+            </header>
+            <div class="main d-flex gap-4">
+                <div class="func card shadow-sm p-4">
+                    <h2 class="h5 fw-semibold mb-4 d-flex align-items-center">
+                        操作面板
+                    </h2>
+                    <FileUpload :multiple="true"></FileUpload>
+                    <div class="transform-type d-flex align-items-center">
+                        <div>转换类型：</div>
+                        <el-select
+                            v-model="convertType"
+                            placeholder="Select"
+                        >
+                            <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                            />
+                        </el-select>
+                    </div>
+                    <el-button
+                        type="primary"
+                        class="start-convert my-3"
+                        :disabled="!fileInfo.length"
+                        @click="start"
+                    >
+                        开始转换
+                    </el-button>
+                </div>
+                <div class="show-files d-flex flex-column flex-grow-1 gap-2">
+                    <div class="text-center">
+                        文件列表
+                    </div>
+                    <div class="file-list d-flex flex-wrap gap-3">
                         <div
                             v-for="info, index in fileInfo"
                             :key="info.name"
@@ -41,28 +79,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="transform-type d-flex align-items-center">
-                    <div>转换类型：</div>
-                    <el-select
-                        v-model="convertType"
-                        placeholder="Select"
-                    >
-                        <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                        />
-                    </el-select>
-                </div>
-                <el-button
-                    type="primary"
-                    class="start-convert"
-                    :disabled="!fileInfo.length"
-                    @click="start"
-                >
-                    开始转换
-                </el-button>
             </div>
         </div>
     </div>
@@ -129,6 +145,11 @@ function removeFile(index) {
 .image-convert {
   .container {
     width: 1200px;
+    .main{
+        .func{
+            width: 460px;
+        }
+    }
     .path-label{
         min-width: 80px;
     }
@@ -136,12 +157,8 @@ function removeFile(index) {
         max-width: 420px;
         height: 40px;
     }
-    .transform {
-        row-gap: 24px;
       .show-files {
-        width: 800px;
         .file-list {
-          column-gap: 12px;
           .file {
             .convert-fail{
                 font-weight: 500;
@@ -173,7 +190,7 @@ function removeFile(index) {
       .transform {
         width: 200px;
       }
-    }
+
   }
 }
 </style>

@@ -52,7 +52,7 @@ const menus = [
     },
     {
         label: '锐化/模糊',
-        name: 'ImageSharpening'
+        name: 'ImageSharpen'
     },
     {
         label: '色彩调整',

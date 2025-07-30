@@ -1,80 +1,117 @@
 <template>
-    <div class="image-size">
-        <div>改变图片大小</div>
-        <div class="desc">
-            <div>等比例缩放：效果图按照渲染图进行缩放展示，实际以原图大小处理</div>
-            <div>固定宽高缩放：以原图像素大小进行设置展示(保持宽高比)，不展示效果图</div>
-        </div>
-        <FileUpload></FileUpload>
-        <div
-            v-if="src"
-            class="content d-flex align-items-start">
-            <!-- <img
-                id="source"
-                src="@/assets/images/1.jpg"
-                @load="init"> -->
-            <img
-                v-if="src"
-                id="source"
-                :src="`file://${src.replace(/\\/g, '/')}`"
-                alt=""
-                @load="init">
-            <div class="func-size d-flex flex-column h-100 mx-3">
-                <div class="methods d-flex justify-content-between">
-                    <el-button
-                        v-for="option, index in options"
-                        :key="option.value"
-                        :type="index + 1 === method ? 'primary' : ''"
-                        @click="method = option.value"
-                    >
-                        {{ option.label }}
-                    </el-button>
-                </div>
-                <div
-                    v-if="method === 1"
-                    class="size-select d-flex align-items-center">
-                    <el-input-number
-                        v-model="ratio"
-                        :max="100"
-                        :min="1"
-                        @change="handleRatio"></el-input-number>
-                    <div>%</div>
-                </div>
-                <div
-                    v-if="method === 2"
-                    class="size-select d-flex align-items-center">
-                    <div class="settings d-flex flex-column">
-                        <div class="width d-flex align-items-center">
-                            宽：
-                            <el-input-number
-                                v-model="showSize.width"
-                                :max="Number.parseInt(actualSize.width)"
-                                :min="1"
-                                @change="handleShowWidth"></el-input-number>
+    <div class="image-size pb-5">
+        <div class="container">
+            <!-- 标题区域 -->
+            <header class="text-center mb-5">
+                <h1 class="display-5 fw-bold text-dark mb-3">
+                    图片调整大小
+                </h1>
+                <p class="text-muted col-md-8 mx-auto">
+                    <span>百分比缩放：效果图按照渲染图进行缩放展示，实际以原图大小处理</span>
+                    <span>固定尺寸缩放：以原图像素大小进行设置展示(保持宽高比)，不展示效果图</span>
+                </p>
+            </header>
+            <div class="main d-flex gap-3">
+                <div class="func card shadow-sm p-4">
+                    <h2 class="h5 fw-semibold mb-4 d-flex align-items-center">
+                        操作面板
+                    </h2>
+                    <FileUpload class="d-flex flex-column gap-3"></FileUpload>
+                    <div class="func-size mt-3">
+                        <div class="methods d-flex ">
+                            <el-button
+                                v-for="option, index in options"
+                                :key="option.value"
+                                :type="index + 1 === method ? 'primary' : ''"
+                                @click="method = option.value"
+                            >
+                                {{ option.label }}
+                            </el-button>
                         </div>
-                        <div class="height d-flex align-items-center">
-                            高：
-                            <el-input-number
-                                v-model="showSize.height"
-                                :max="Number.parseInt(actualSize.height)"
-                                :min="1"
-                                @change="handleShowHeight"></el-input-number>
+                        <div class="method-func d-flex my-3">
+                            <div
+                                v-if="method === 1"
+                                class="size-select d-flex align-items-center"
+                            >
+                                <el-input-number
+                                    v-model="ratio"
+                                    :max="100"
+                                    :min="1"
+                                    @change="handleRatio"
+                                ></el-input-number>
+                            </div>
+                            <div
+                                v-if="method === 2"
+                                class="size-select d-flex align-items-center"
+                            >
+                                <div class="settings d-flex flex-column">
+                                    <div class="width d-flex align-items-center">
+                                        宽：
+                                        <el-input-number
+                                            v-model="showSize.width"
+                                            :max="Number.parseInt(actualSize.width)"
+                                            :min="1"
+                                            @change="handleShowWidth"></el-input-number>
+                                    </div>
+                                    <div class="height d-flex align-items-center">
+                                        高：
+                                        <el-input-number
+                                            v-model="showSize.height"
+                                            :max="Number.parseInt(actualSize.height)"
+                                            :min="1"
+                                            @change="handleShowHeight"></el-input-number>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <el-button @click="save">
+                            保存
+                        </el-button>
+                    </div>
+                </div>
+                <div
+                    v-if="src"
+                    class="content d-flex align-items-start flex-grow-1 gap-3"
+                >
+                    <div class="source">
+                        <h3 class="h6 fw-medium mb-2 text-center">
+                            原始图片
+                        </h3>
+                        <div class="source-img border border-primary d-flex align-items-center justify-content-center">
+                            <img
+                                id="source"
+                                src="@/assets/images/1.jpg"
+                                @load="init"
+                            >
+                        </div>
+                    <!-- <img
+                        v-if="src"
+                        id="source"
+                        :src="`file://${src.replace(/\\/g, '/')}`"
+                        alt=""
+                        @load="init"
+                    > -->
+                    </div>
+                    <div
+                        v-if="method === 1"
+                        class="result"
+                    >
+                        <h3 class="h6 fw-medium mb-2 text-center">
+                            处理后图片
+                        </h3>
+                        <div class="target-img border border-primary d-flex align-items-center justify-content-center">
+                            <img
+                                id="target"
+                                src="@/assets/images/1.jpg"
+                            >
+                            <!-- <img
+                                v-if="src && method === 1"
+                                id="target"
+                                :src="`file://${src.replace(/\\/g, '/')}`"
+                            > -->
                         </div>
                     </div>
                 </div>
-                <el-button @click="save">
-                    保存
-                </el-button>
-            </div>
-            <div class="result d-flex justify-content-center align-items-center">
-                <!-- <img
-                    v-if="method === 1"
-                    id="target"
-                    src="@/assets/images/1.jpg"> -->
-                <img
-                    v-if="src && method === 1"
-                    id="target"
-                    :src="`file://${src.replace(/\\/g, '/')}`">
             </div>
         </div>
     </div>
@@ -194,9 +231,19 @@ function handleShowHeight(val) {
 
 <style lang="scss" scoped>
 .image-size{
-    img{
-        max-width: 300px;
-        max-height: 600px;
+    .source-img,
+    .target-img{
+        width: 300px;
+        height: 600px;
+        img{
+            max-width: 100%;
+            max-height: 100%;
+        }
+    }
+    .container{
+        .func{
+            width: 460px;
+        }
     }
     .content{
         height: 600px;

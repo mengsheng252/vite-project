@@ -30,16 +30,16 @@ function createWindow() {
     })
 
     mainWin.loadFile(path.join(__dirname, './index.html'))
-    // mainWin.loadURL('http://localhost:5173', {
-    //     extraFiles: [
-    //         'node_modules/element-plus/dist/**/*' // 打包时包含 Element 样式
-    //     ]
-    // })
-    mainWin.loadFile(path.join(__dirname, '../dist/index.html'), {
+    mainWin.loadURL('http://localhost:5173', {
         extraFiles: [
             'node_modules/element-plus/dist/**/*' // 打包时包含 Element 样式
         ]
     })
+    // mainWin.loadFile(path.join(__dirname, '../dist/index.html'), {
+    //     extraFiles: [
+    //         'node_modules/element-plus/dist/**/*' // 打包时包含 Element 样式
+    //     ]
+    // })
     mainWin.webContents.openDevTools()
 }
 

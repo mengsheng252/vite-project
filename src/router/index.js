@@ -36,6 +36,11 @@ const router = createRouter({
                     path: 'imageFlip',
                     name: 'ImageFlip',
                     component: () => import('@/views/imageClip/imageFlip.vue')
+                },
+                {
+                    path: 'imageSharpen',
+                    name: 'ImageSharpen',
+                    component: () => import('@/views/imageClip/imageSharpen.vue')
                 }
             ]
         },

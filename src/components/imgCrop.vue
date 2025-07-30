@@ -1,27 +1,26 @@
 <template>
-    <div class="img-crop d-flex flex-column">
-        <div class="func-btn d-flex align-items-center">
-            <el-button
-                type="primary"
-                @click="crop">
-                裁剪
-            </el-button>
-            <el-button
-                v-if="cropSrc"
-                type="primary"
-                @click="saveImage(cropSrc)"
-            >
-                下载
-            </el-button>
-        </div>
-        <div class="content-show d-flex justify-content-between">
-            <div class="crop-container d-flex justify-content-center align-items-center">
+    <div class="img-crop">
+        <div class="content-show d-flex gap-3">
+            <title>
+                <h3 class="h6 fw-medium mb-2 text-center">
+                原始图片
+                </h3>
+                <h3 class="h6 fw-medium mb-2 text-center">
+                处理后图片
+                </h3>
+            </title>
+            <div class="crop-container border border-primary d-flex justify-content-center align-items-center">
                 <!-- 底图 -->
-                <img
+                <!-- <img
                     id="imagePreview"
                     :src="`file://${src.replace(/\\/g, '/')}`"
-                    @load="init">
-                <!-- <img id="imagePreview" src="@/assets/images/1.jpg" @load="init"> -->
+                    @load="init"
+                > -->
+                <img
+                    id="imagePreview"
+                    src="@/assets/images/1.jpg"
+                    @load="init"
+                >
                 <div class="crop-overlay">
                     <!-- 遮罩 -->
                     <div class="mask"></div>
@@ -30,11 +29,16 @@
                         class="crop-area">
                         <!-- 对照图片 -->
                         <div class="warpper">
-                            <!-- <img id="compareImg" src="@/assets/images/1.jpg" alt=""> -->
                             <img
                                 id="compareImg"
+                                src="@/assets/images/1.jpg"
+                                alt=""
+                            >
+                            <!-- <img
+                                id="compareImg"
                                 :src="`file://${src.replace(/\\/g, '/')}`"
-                                alt="">
+                                alt=""
+                            > -->
                         </div>
                         <div
                             id="handleTL"
@@ -51,7 +55,7 @@
                     </div>
                 </div>
             </div>
-            <div class="show-crop-image d-flex justify-content-center align-items-center">
+            <div class="show-crop-image border border-primary d-flex justify-content-center align-items-center">
                 <canvas id="cropCanvas"></canvas>
                 <img
                     v-if="cropSrc"
@@ -93,6 +97,10 @@ let handles = {}
 const start = {
     x: 0,
     y: 0
+}
+
+function save() {
+    saveImage(cropSrc)
 }
 
 function removeEventListener() {
@@ -262,7 +270,7 @@ function crop() {
     cropSrc.value = canvas.toDataURL('image/jpeg', 0.92)
 }
 
-defineExpose({ crop, cropSrc })
+defineExpose({ crop, cropSrc, save })
 </script>
 
 <style lang="scss" scoped>
