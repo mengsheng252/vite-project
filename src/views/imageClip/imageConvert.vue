@@ -13,12 +13,15 @@
                     通过sharp库实现图片格式转换，支持png,jpg,hpeg,webp等
                 </p>
             </header>
-            <div class="main d-flex gap-4">
-                <div class="func card shadow-sm p-4">
-                    <h2 class="h5 fw-semibold mb-4 d-flex align-items-center">
+            <main class="function-content d-flex gap-4">
+                <div class="function-setting card shadow-sm p-4">
+                    <h2 class="h5 fw-semibold mt-4 d-flex align-items-center">
                         操作面板
                     </h2>
-                    <FileUpload :multiple="true"></FileUpload>
+                    <FileUpload
+                        :multiple="true"
+                        class="d-flex flex-column gap-3 my-3"
+                    ></FileUpload>
                     <div class="transform-type d-flex align-items-center">
                         <div>转换类型：</div>
                         <el-select
@@ -36,24 +39,24 @@
                     <el-button
                         type="primary"
                         class="start-convert my-3"
-                        :disabled="!fileInfo.length"
+                        :disabled="!files.length"
                         @click="start"
                     >
                         开始转换
                     </el-button>
                 </div>
-                <div class="show-files d-flex flex-column flex-grow-1 gap-2">
+                <div class="function-show d-flex flex-column flex-grow-1 gap-2">
                     <div class="text-center">
                         文件列表
                     </div>
                     <div class="file-list d-flex flex-wrap gap-3">
                         <div
-                            v-for="info, index in fileInfo"
-                            :key="info.name"
+                            v-for="file, index in files"
+                            :key="file.name"
                             class="file position-relative"
                         >
                             <div
-                                v-if="convertFail(info.path)"
+                                v-if="convertFail(file.path)"
                                 class="convert-fail position-absolute top-50 start-50"
                             >
                                 处理失败
@@ -67,19 +70,19 @@
                             </el-icon>
                             <img
                                 class="cover"
-                                :src="info.path"
+                                :src="file.path"
                                 alt=""
                             >
                             <div
                                 class="file-name text-ellipsis"
-                                :title="info.name"
+                                :title="file.name"
                             >
-                                {{ info.name }}
+                                {{ file.name }}
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </main>
         </div>
     </div>
 </template>
@@ -115,7 +118,7 @@ const options = [
     }
 ]
 
-const fileInfo = computed(() => store.files || [])
+const files = computed(() => store.files || [])
 
 const errFiles = computed(() => store.errFiles)
 
@@ -125,8 +128,8 @@ function convertFail(path) {
 
 async function start() {
     loading.value = true
-    for await (const info of fileInfo.value) {
-        await convertImage(info.path, convertType.value)
+    for await (const file of files.value) {
+        await convertImage(file.path, convertType.value)
     }
     loading.value = false
 }
@@ -137,7 +140,7 @@ async function start() {
  */
 function removeFile(index) {
     store.convertImage = 0
-    fileInfo.value.splice(index, 1)
+    files.value.splice(index, 1)
 }
 </script>
 
@@ -145,8 +148,8 @@ function removeFile(index) {
 .image-convert {
   .container {
     width: 1200px;
-    .main{
-        .func{
+    .function-content{
+        .function-setting{
             width: 460px;
         }
     }
@@ -157,7 +160,7 @@ function removeFile(index) {
         max-width: 420px;
         height: 40px;
     }
-      .show-files {
+      .function-show {
         .file-list {
           .file {
             .convert-fail{

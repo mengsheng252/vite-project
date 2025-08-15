@@ -41,13 +41,35 @@ const router = createRouter({
                     path: 'imageSharpen',
                     name: 'ImageSharpen',
                     component: () => import('@/views/imageClip/imageSharpen.vue')
-                }
+                },
+                {
+                    path: 'imageStitcher',
+                    name: 'ImageStitcher',
+                    component: () => import('@/views/imageClip/imageStitcher.vue')
+                },
+                {
+                    path: 'imageCompress',
+                    name: 'ImageCompress',
+                    component: () => import('@/views/imageClip/imageCompress.vue')
+                },
             ]
         },
         {
             path: '/videoClip',
             name: 'VideoClip',
             component: () => import('@/views/videoClip/index.vue'),
+        },
+        {
+            path: '/textClip',
+            name: 'TextClip',
+            component: () => import('@/views/textClip/index.vue'),
+            children: [
+                {
+                    path: 'textVoice',
+                    name: 'TextVoice',
+                    component: () => import('@/views/textClip/textVoice.vue')
+                }
+            ]
         }
     ]
 })

@@ -13,13 +13,13 @@
                     手动选择裁剪图片，拖拽按钮调整裁剪区域与大小
                 </p>
             </header>
-            <div class="main d-flex flex-column gap-3">
+            <main class="function-content d-flex flex-column gap-3">
                 <img-crop
                     v-if="src"
                     ref="cropRef"
                     :src="src"
                 ></img-crop>
-                <div class="func card shadow-sm p-4 d-flex flex-row gap-3 align-items-center">
+                <div class="function-setting card shadow-sm p-4 d-flex flex-row gap-3 align-items-center">
                     <h2 class="h5 fw-semibold d-flex align-items-center">
                         操作面板
                     </h2>
@@ -38,7 +38,7 @@
                         下载
                     </el-button>
                 </div>
-            </div>
+            </main>
         </div>
     </div>
 </template>
@@ -52,7 +52,7 @@ import { useStore } from '@/hooks/stores'
 const loading = ref(false)
 const store = useStore()
 
-const src = computed(() => store.file || '')
+const src = computed(() => store.file?.path || '')
 
 const cropRef = ref()
 

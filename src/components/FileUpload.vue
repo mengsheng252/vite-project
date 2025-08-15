@@ -1,5 +1,5 @@
 <template>
-    <div class="file-upload">
+    <div class="file-upload w-100">
         <Storage></Storage>
         <el-button
             type="primary"

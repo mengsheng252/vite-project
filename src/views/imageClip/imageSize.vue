@@ -11,26 +11,32 @@
                     <span>固定尺寸缩放：以原图像素大小进行设置展示(保持宽高比)，不展示效果图</span>
                 </p>
             </header>
-            <div class="main d-flex gap-3">
-                <div class="func card shadow-sm p-4">
+            <main class="function-content d-flex gap-3">
+                <div class="function-setting card shadow-sm p-4">
                     <h2 class="h5 fw-semibold mb-4 d-flex align-items-center">
                         操作面板
                     </h2>
                     <FileUpload class="d-flex flex-column gap-3"></FileUpload>
-                    <div class="func-size mt-3">
-                        <div class="methods d-flex ">
-                            <el-button
-                                v-for="option, index in options"
-                                :key="option.value"
-                                :type="index + 1 === method ? 'primary' : ''"
-                                @click="method = option.value"
-                            >
-                                {{ option.label }}
-                            </el-button>
+                    <div
+                        v-if="src"
+                        class="func-size mt-3"
+                    >
+                        <div class="function-method d-flex ">
+                            <el-radio-group v-model="fixSize">
+                                <el-radio-button
+                                    v-for="option in options"
+                                    :key="option.value"
+                                    :value="option.value"
+                                >
+                                    {{ option.label }}
+                                </el-radio-button>
+                            </el-radio-group>
                         </div>
-                        <div class="method-func d-flex my-3">
+                        <div
+                            class="method-func d-flex my-3"
+                        >
                             <div
-                                v-if="method === 1"
+                                v-if="!fixSize"
                                 class="size-select d-flex align-items-center"
                             >
                                 <el-input-number
@@ -41,17 +47,18 @@
                                 ></el-input-number>
                             </div>
                             <div
-                                v-if="method === 2"
+                                v-if="fixSize"
                                 class="size-select d-flex align-items-center"
                             >
-                                <div class="settings d-flex flex-column">
+                                <div class="settings d-flex flex-column gap-3">
                                     <div class="width d-flex align-items-center">
                                         宽：
                                         <el-input-number
                                             v-model="showSize.width"
                                             :max="Number.parseInt(actualSize.width)"
                                             :min="1"
-                                            @change="handleShowWidth"></el-input-number>
+                                            @change="handleShowWidth"
+                                        ></el-input-number>
                                     </div>
                                     <div class="height d-flex align-items-center">
                                         高：
@@ -59,19 +66,22 @@
                                             v-model="showSize.height"
                                             :max="Number.parseInt(actualSize.height)"
                                             :min="1"
-                                            @change="handleShowHeight"></el-input-number>
+                                            @change="handleShowHeight"
+                                        ></el-input-number>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <el-button @click="save">
+                        <el-button
+                            @click="save"
+                        >
                             保存
                         </el-button>
                     </div>
                 </div>
                 <div
                     v-if="src"
-                    class="content d-flex align-items-start flex-grow-1 gap-3"
+                    class="function-show d-flex align-items-start flex-grow-1 gap-3"
                 >
                     <div class="source">
                         <h3 class="h6 fw-medium mb-2 text-center">
@@ -93,7 +103,7 @@
                     > -->
                     </div>
                     <div
-                        v-if="method === 1"
+                        v-if="!fixSize"
                         class="result"
                     >
                         <h3 class="h6 fw-medium mb-2 text-center">
@@ -105,14 +115,14 @@
                                 src="@/assets/images/1.jpg"
                             >
                             <!-- <img
-                                v-if="src && method === 1"
+                                v-if="src && !fixSize"
                                 id="target"
                                 :src="`file://${src.replace(/\\/g, '/')}`"
                             > -->
                         </div>
                     </div>
                 </div>
-            </div>
+            </main>
         </div>
     </div>
 </template>
@@ -124,20 +134,20 @@ import { useStore } from '@/hooks/stores'
 
 const store = useStore()
 
-const src = computed(() => store.file || '')
-
-const method = ref(1)
+const src = computed(() => store.file?.path || '')
 
 const options = [
     {
-        value: 1,
+        value: false,
         label: '百分比缩放'
     },
     {
-        value: 2,
+        value: true,
         label: '固定尺寸缩放'
     }
 ]
+
+const fixSize = ref(false)
 
 const ratio = ref(100)
 
@@ -179,7 +189,7 @@ function init() {
  * 保存图片
  */
 function save() {
-    if (method.value === 1) {
+    if (!fixSize.value) {
         const { width, height } = actualSize.value
         window.electronAPI.changeImageSize({
             path: src.value,
@@ -189,7 +199,7 @@ function save() {
             }
         })
     }
-    else if (method.value === 2) {
+    else if (fixSize.value) {
         const { width, height } = showSize.value
         window.electronAPI.changeImageSize({ path: src.value, size: { width, height } })
     }
@@ -241,11 +251,11 @@ function handleShowHeight(val) {
         }
     }
     .container{
-        .func{
+        .function-setting{
             width: 460px;
         }
     }
-    .content{
+    .function-show{
         height: 600px;
         .func-size{
             row-gap: 12px;
@@ -261,7 +271,7 @@ function handleShowHeight(val) {
                     width: 120px;
                 }
             }
-            .methods{
+            .function-method{
                 min-width: 240px;
             }
         }

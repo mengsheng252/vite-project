@@ -2,7 +2,8 @@
     <div class="image-clip p-3">
         <div
             v-if="showMenu"
-            class="content d-flex flex-wrap gap-3 row-gap-2">
+            class="content d-flex flex-wrap gap-3 row-gap-2"
+        >
             <div
                 v-for="menu in menus"
                 :key="menu.name"
@@ -80,7 +81,7 @@ const menus = [
     },
     {
         label: '图片拼接',
-        name: 'ImageConvert'
+        name: 'ImageStitcher'
     },
     {
         label: '添加边框',
@@ -122,7 +123,7 @@ onMounted(() => {
         }
         if (store.convertCount === store.files.length) {
             if (store.convertCount === 1 && store.errFiles.length === 1) {
-                ElMessage.success('图片处理失败')
+                ElMessage.error('图片处理失败')
             }
             else {
                 ElMessage.success('图片处理结束')

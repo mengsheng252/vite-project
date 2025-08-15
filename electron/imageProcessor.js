@@ -121,3 +121,86 @@ function sendMsgToRender(args) {
     const focusedWindow = BrowserWindow.getFocusedWindow();
     focusedWindow.webContents.send('image-process', args)
 }
+
+/**
+ * 获取图片数据
+ * @param {*} filePath
+ * @returns
+ */
+export async function getImageData(filePath) {
+    try {
+        const metadata = await sharp(filePath).metadata();
+        return {
+            width: metadata.width,
+            height: metadata.height
+        };
+    } catch (error) {
+        console.error('Error getting image dimensions:', error);
+        return null;
+    }
+}
+
+/**
+ * 图片质量压缩
+ * @param {*} input
+ * @param {*} output
+ * @param {*} quality
+ */
+export async function compressImage(input, output, quality) {
+    const { format } = await sharp(input).metadata();
+    try {
+        if (format === 'jpeg') {
+            sharp(input)
+                .jpeg({ quality, mozjpeg: true })
+                .toFile(output)
+        } else if (format === 'png') {
+            sharp(input)
+                .png({ compressionLevel: 9 })
+                .toFile(output);
+        } else {
+            sharp(input)
+                .webp({ quality })
+                .toFile(output);
+        }
+        sendMsgToRender({
+            name: 'imageCompress',
+            status: 'success',
+            errFile: null
+        })
+    } catch (error) {
+        sendMsgToRender({
+            name: 'imageCompress',
+            status: 'error',
+            errFile: input
+        })
+    }
+}
+
+export async function blurImage(inputPath, outputPath, blurValue = 5) {
+    try {
+        const buffer = await sharp(inputPath)
+            .blur(blurValue)  // 模糊半径 (0.3~1000，值越大越模糊)
+            // .toFile(outputPath)
+            .toBuffer();
+        return buffer.toString('base64');
+    } catch (err) {
+        console.error('模糊失败:', err);
+    }
+}
+
+
+export async function sharpenImage(inputPath, outputPath, sigma) {
+    try {
+        const buffer = await sharp(inputPath)
+            .sharpen({
+                sigma,       // 锐化强度 (0.3~1000，默认1.0)
+                flat: 1.0,      // 平坦区域的锐化强度 (0.0~1.0)
+                jagged: 1.0     // 边缘锐化强度 (0.0~1.0)
+            })
+            // .toFile(outputPath)
+            .toBuffer()
+        return buffer.toString('base64');
+    } catch (err) {
+        console.error('锐化失败:', err);
+    }
+}

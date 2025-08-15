@@ -6,7 +6,7 @@ import fs from 'fs-extra'
 // 获取当前文件目录
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-export async function saveImage(imageData, storagePath) {
+export async function saveImage(imagePath, storagePath) {
     // 弹出保存对话框
     const { filePath } = await dialog.showSaveDialog({
         title: '保存图片',
@@ -22,7 +22,7 @@ export async function saveImage(imageData, storagePath) {
 
     try {
         // 移除 data URL 前缀
-        const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '')
+        const base64Data = imagePath.replace(/^data:image\/\w+;base64,/, '')
         const buffer = Buffer.from(base64Data, 'base64')
 
         // 写入文件

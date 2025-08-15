@@ -1,9 +1,7 @@
 <template>
     <div class="storage">
         <div class="sotrage-path d-flex align-items-center">
-            <div class="path-label">
-                保存路径：
-            </div>
+            <label for="">保存路径：</label>
             <div
                 class="select-storage-path btn border border-primary text-ellipsis"
                 :title="storagePath"
@@ -39,3 +37,9 @@ onMounted(async () => {
     storagePath.value = await window.electronAPI.getDesktopPath()
 })
 </script>
+
+<style lang="scss" scoped>
+label{
+    min-width: 80px;
+}
+</style>

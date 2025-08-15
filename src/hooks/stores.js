@@ -10,12 +10,9 @@ export const useStore = defineStore('useStore', {
     }),
     actions: {
         setupFileListener() {
-            this.uploadFileListener = window.electronAPI.onFileSelected((info) => {
-                this.files = info.paths.map((path, index) => ({
-                    path,
-                    name: info.names[index]
-                }))
-                this.file = info.paths[0]
+            this.uploadFileListener = window.electronAPI.onFileSelected((data) => {
+                this.files = data
+                this.file = data[0]
                 this.convertCount = 0
             })
         },

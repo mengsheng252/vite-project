@@ -5,6 +5,18 @@
     border-radius: 4px;
 }
 
+:deep(.el-radio-group){
+    .el-radio-button{
+        .el-radio-button__inner{
+            min-width: 80px;
+            width: fit-content;
+            height: 40px;
+            line-height: 40px;
+            padding: 0;
+        }
+    }
+}
+
 :deep(.el-select){
     min-width: 100px;
     width: fit-content;

@@ -21,6 +21,10 @@ const menus = [
     {
         label: '视频剪辑',
         name: 'VideoClip',
+    },
+    {
+        label: '文本剪辑',
+        name: 'TextClip',
     }
 ]
 const router = useRouter()
