@@ -3,6 +3,7 @@ import path from 'node:path'
 import sharp from 'sharp'
 // import MessageManager from "./message-manager.js"
 import { BrowserWindow } from 'electron'
+import fs from 'node:fs'
 
 /**
  * 图片格式转换
@@ -202,5 +203,25 @@ export async function sharpenImage(inputPath, outputPath, sigma) {
         return buffer.toString('base64');
     } catch (err) {
         console.error('锐化失败:', err);
+    }
+}
+
+export function saveBase64File(base64Data, outputPath, filePath) {
+    try {
+        const base64Content = base64Data.split(';base64,').pop();
+        const buffer = Buffer.from(base64Content, 'base64');
+        fs.writeFileSync(outputPath, buffer);
+        sendMsgToRender({
+            name: 'imageCompress',
+            status: 'success',
+            errFile: null
+        })
+    } catch (error) {
+        console.log("err",error);
+        sendMsgToRender({
+            name: 'imageCompress',
+            status: 'error',
+            errFile: filePath
+        })
     }
 }

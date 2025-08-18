@@ -115,7 +115,8 @@ label{
     }
 
     &.compare {
-      justify-content: space-around;
+      // justify-content: space-around;
+      justify-content: flex-start;
       gap: 0;
 
       .source,
@@ -130,7 +131,7 @@ label{
         &::after {
           content: '原图';
           position: absolute;
-          top: 16px;
+          top: 8px;
           left: 0;
           right: 0;
           z-index: 1;

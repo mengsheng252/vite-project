@@ -38,18 +38,18 @@
                                 class="selected-method-item"
                             >
                                 <label for="">{{ `${method.label}：` }}</label>
-                                <el-input-number
+                                <!-- <el-input-number
                                     v-model="method.value"
                                     :min="0"
                                     :max="100"
                                     :disabled="funcMethod !== method.label"
-                                ></el-input-number>
-                                <!-- <el-slider
+                                ></el-input-number> -->
+                                <el-slider
                                     v-model="method.value"
                                     :min="0"
                                     :max="100"
                                     :disabled="funcMethod !== method.label"
-                                /> -->
+                                />
                             </div>
                         </div>
                     </div>
@@ -60,7 +60,14 @@
                         <el-button
                             type="primary"
                             @click="start">
-                            转换
+                            添加效果
+                        </el-button>
+                        <el-button
+                            v-if="targetSrc"
+                            type="primary"
+                            @click="save"
+                        >
+                            保存
                         </el-button>
                     </div>
                 </div>
@@ -89,7 +96,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import FileUpload from '@/components/FileUpload.vue'
 import { useStore } from '@/hooks/stores'
 
@@ -111,6 +118,10 @@ const methods = ref(
 )
 const funcMethod = ref(methods.value[0].label)
 
+watch(() => file.value, () => {
+    targetSrc.value = ''
+})
+
 const arg = computed(() => {
     const data = methods.value.find(x => x.label === funcMethod.value)
     if (data) {
@@ -120,6 +131,9 @@ const arg = computed(() => {
 })
 
 async function start() {
+    if (arg.value === 0) {
+        return
+    }
     loading.value = true
     let base64
     if (funcMethod.value === '锐化') {
@@ -138,6 +152,10 @@ async function start() {
         targetSrc.value = `data:image/jpeg;base64,${base64}`
     }
     loading.value = false
+}
+
+function save() {
+    window.electronAPI.saveBase64File({ ...file.value, base64: targetSrc.value })
 }
 </script>
 
