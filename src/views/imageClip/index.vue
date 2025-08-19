@@ -57,7 +57,7 @@ const menus = [
     },
     {
         label: '色彩调整',
-        name: 'ImageConvert'
+        name: 'ImageColor'
     },
     {
         label: '去除噪点',

@@ -206,6 +206,12 @@ export async function sharpenImage(inputPath, outputPath, sigma) {
     }
 }
 
+/**
+ *
+ * @param {*} base64Data
+ * @param {*} outputPath
+ * @param {*} filePath
+ */
 export function saveBase64File(base64Data, outputPath, filePath) {
     try {
         const base64Content = base64Data.split(';base64,').pop();
@@ -217,11 +223,39 @@ export function saveBase64File(base64Data, outputPath, filePath) {
             errFile: null
         })
     } catch (error) {
-        console.log("err",error);
+        console.log("err", error);
         sendMsgToRender({
             name: 'imageCompress',
             status: 'error',
             errFile: filePath
         })
     }
+}
+
+/**
+ * @param {*} input 输入
+ * @param {*} brightness 亮度
+ * @param {*} saturation 饱和度
+ * @param {*} hue 色相旋转
+ * @param {*} contrast 对比度
+ * @param {*} gamma Gamma
+ */
+export async function imageColor({path, brightness, saturation, hue, contrast, gamma, negate, grayscale }) {
+    const sharpImage = sharp(path)
+        // 组合色彩调整（modulate 可合并多个参数）
+        .modulate({
+            brightness,
+            saturation,
+            hue,
+        })
+        .linear(contrast)
+        .gamma(gamma)
+    if(negate){
+        sharpImage.negate()
+    }
+    if(grayscale){
+        sharpImage.grayscale()
+    }
+    const buffer = await sharpImage.toBuffer()
+    return buffer.toString('base64');
 }

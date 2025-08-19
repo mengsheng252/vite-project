@@ -52,6 +52,11 @@ const router = createRouter({
                     name: 'ImageCompress',
                     component: () => import('@/views/imageClip/imageCompress.vue')
                 },
+                {
+                    path: 'imageColor',
+                    name: 'ImageColor',
+                    component: () => import('@/views/imageClip/imageColor.vue')
+                }
             ]
         },
         {

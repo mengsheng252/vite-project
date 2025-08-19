@@ -11,7 +11,8 @@ import {
     compressImage,
     sharpenImage,
     blurImage,
-    saveBase64File
+    saveBase64File,
+    imageColor
 } from './imageProcessor.js'
 import { ensureOutputDirExists, getDesktopPath, openFolder, selectFolder } from './output.js'
 import { saveImage } from './saveFile.js'
@@ -168,4 +169,12 @@ ipcMain.on('save-base64-file', (e, options) => {
     }
     const outputPath = getOutput(options.path, storagePath)
     saveBase64File(options.base64, outputPath, options.path)
+})
+
+ipcMain.handle('image-color', (e, options) => {
+    if (!storagePath) {
+        storagePath = getDesktopPath()
+    }
+    const outputPath = getOutput(options.path, storagePath)
+    return imageColor({...options, outputPath})
 })

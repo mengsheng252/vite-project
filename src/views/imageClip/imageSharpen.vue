@@ -18,7 +18,7 @@
                         操作面板
                     </h2>
                     <FileUpload class="d-flex flex-column gap-3"></FileUpload>
-                    <div class="function-method">
+                    <div class="function-method flex-column">
                         <div class="select-methods">
                             <label for="">功能：</label>
                             <el-radio-group v-model="funcMethod">
@@ -60,7 +60,7 @@
                         <el-button
                             type="primary"
                             @click="start">
-                            添加效果
+                            应用效果
                         </el-button>
                         <el-button
                             v-if="targetSrc"
@@ -161,6 +161,5 @@ function save() {
 
 <style lang="scss" scoped>
 .image-sharpen{
-
 }
 </style>

@@ -32,6 +32,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     imageCompress: options => ipcRenderer.send('image-compress', options),
     imageSharpen: options=>ipcRenderer.invoke('image-sharpen',options),
     imageBlur: options=>ipcRenderer.invoke('image-blur',options),
+    imageColor: options=>ipcRenderer.invoke('image-color',options),
     saveBase64File: options=>ipcRenderer.send('save-base64-file',options),
     imageProcessResult: (callback) => {
         const handler = (event, options) => callback(options)
