@@ -6,6 +6,7 @@
 }
 
 :deep(.el-radio-group){
+    flex-wrap: nowrap;
     .el-radio-button{
         .el-radio-button__inner{
             min-width: 80px;
@@ -33,4 +34,10 @@
 .el-input-number{
     width: 120px;
     height: 32px;
+}
+
+.el-radio-button{
+    .el-radio-button__inner{
+        padding: 8px 12px;
+    }
 }

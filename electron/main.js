@@ -12,7 +12,8 @@ import {
     sharpenImage,
     blurImage,
     saveBase64File,
-    imageColor
+    imageColor,
+    imageRemoveNoise
 } from './imageProcessor.js'
 import { ensureOutputDirExists, getDesktopPath, openFolder, selectFolder } from './output.js'
 import { saveImage } from './saveFile.js'
@@ -122,6 +123,7 @@ ipcMain.handle('save-image', async (event, imgPath) => {
     saveImage(imgPath, storagePath)
 })
 
+// 改变图片大小
 ipcMain.on('change-image-size', (e, options) => {
     if (!storagePath) {
         storagePath = getDesktopPath()
@@ -130,7 +132,7 @@ ipcMain.on('change-image-size', (e, options) => {
     changeSize(options.path, outputPath, options.size)
 })
 
-
+// 图片翻转
 ipcMain.on('image-flip', (e, options) => {
     if (!storagePath) {
         storagePath = getDesktopPath()
@@ -139,6 +141,7 @@ ipcMain.on('image-flip', (e, options) => {
     imageFlip(options.path, outputPath, options)
 })
 
+// 图片压缩
 ipcMain.on('image-compress', async (e, options) => {
     if (!storagePath) {
         storagePath = getDesktopPath()
@@ -147,6 +150,7 @@ ipcMain.on('image-compress', async (e, options) => {
     await compressImage(options.path, outputPath, options.quality)
 })
 
+// 图片锐化处理
 ipcMain.handle('image-sharpen', async (e, options) => {
     if (!storagePath) {
         storagePath = getDesktopPath()
@@ -155,6 +159,7 @@ ipcMain.handle('image-sharpen', async (e, options) => {
     return await sharpenImage(options.path, outputPath, options.sharpen)
 })
 
+// 图片模糊处理
 ipcMain.handle('image-blur', async (e, options) => {
     if (!storagePath) {
         storagePath = getDesktopPath()
@@ -163,6 +168,7 @@ ipcMain.handle('image-blur', async (e, options) => {
     return await blurImage(options.path, outputPath, options.blur)
 })
 
+// 保存base64文件
 ipcMain.on('save-base64-file', (e, options) => {
     if (!storagePath) {
         storagePath = getDesktopPath()
@@ -171,10 +177,16 @@ ipcMain.on('save-base64-file', (e, options) => {
     saveBase64File(options.base64, outputPath, options.path)
 })
 
+// 图片色彩调整
 ipcMain.handle('image-color', (e, options) => {
     if (!storagePath) {
         storagePath = getDesktopPath()
     }
     const outputPath = getOutput(options.path, storagePath)
-    return imageColor({...options, outputPath})
+    return imageColor({ ...options, outputPath })
+})
+
+// 图片降噪
+ipcMain.handle('image-remove-noise', (e, options) => {
+    return imageRemoveNoise({ ...options })
 })

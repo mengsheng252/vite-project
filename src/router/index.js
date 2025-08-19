@@ -56,6 +56,11 @@ const router = createRouter({
                     path: 'imageColor',
                     name: 'ImageColor',
                     component: () => import('@/views/imageClip/imageColor.vue')
+                },
+                {
+                    path: 'imageRemoveNoise',
+                    name: 'ImageRemoveNoise',
+                    component: () => import('@/views/imageClip/imageRemoveNoise.vue')
                 }
             ]
         },

@@ -240,7 +240,7 @@ export function saveBase64File(base64Data, outputPath, filePath) {
  * @param {*} contrast 对比度
  * @param {*} gamma Gamma
  */
-export async function imageColor({path, brightness, saturation, hue, contrast, gamma, negate, grayscale }) {
+export async function imageColor({ path, brightness, saturation, hue, contrast, gamma, negate, grayscale }) {
     const sharpImage = sharp(path)
         // 组合色彩调整（modulate 可合并多个参数）
         .modulate({
@@ -250,12 +250,28 @@ export async function imageColor({path, brightness, saturation, hue, contrast, g
         })
         .linear(contrast)
         .gamma(gamma)
-    if(negate){
+    if (negate) {
         sharpImage.negate()
     }
-    if(grayscale){
+    if (grayscale) {
         sharpImage.grayscale()
     }
     const buffer = await sharpImage.toBuffer()
     return buffer.toString('base64');
+}
+
+/**
+ *
+ * @param {*} path
+ * @param {*} median
+ * @param {*} blur
+ * @returns
+ */
+export async function imageRemoveNoise({path, median, blur}) {
+    // 单独处理色度通道(通常噪点更明显)
+    const base64 = await sharp(path)
+        .median(median)  // 先去除孤立噪点（椒盐噪点）
+        .blur(blur)  // 再平滑高斯噪点（均匀噪点）
+        .toBuffer()
+    return base64.toString('base64')
 }

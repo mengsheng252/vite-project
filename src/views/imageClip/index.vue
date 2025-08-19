@@ -60,8 +60,8 @@ const menus = [
         name: 'ImageColor'
     },
     {
-        label: '去除噪点',
-        name: 'ImageConvert'
+        label: '降噪',
+        name: 'ImageRemoveNoise'
     },
     {
         label: '添加水印',

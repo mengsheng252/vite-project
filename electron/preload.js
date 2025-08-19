@@ -30,10 +30,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
     changeImageSize: options => ipcRenderer.send('change-image-size', options),
     handleImageFlip: options => ipcRenderer.send('image-flip', options),
     imageCompress: options => ipcRenderer.send('image-compress', options),
-    imageSharpen: options=>ipcRenderer.invoke('image-sharpen',options),
-    imageBlur: options=>ipcRenderer.invoke('image-blur',options),
-    imageColor: options=>ipcRenderer.invoke('image-color',options),
-    saveBase64File: options=>ipcRenderer.send('save-base64-file',options),
+    imageSharpen: options => ipcRenderer.invoke('image-sharpen', options),
+    imageBlur: options => ipcRenderer.invoke('image-blur', options),
+    imageColor: options => ipcRenderer.invoke('image-color', options),
+    saveBase64File: options => ipcRenderer.send('save-base64-file', options),
     imageProcessResult: (callback) => {
         const handler = (event, options) => callback(options)
         ipcRenderer.on('image-process', handler)
@@ -42,4 +42,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
             ipcRenderer.off('image-process', handler)
         }
     },
+    imageRemoveNoise: options => ipcRenderer.invoke('image-remove-noise', options)
 })

@@ -31,8 +31,8 @@ const openImageOptions = {
     title: '选择文件',
     properties: ['openFile', 'multiSelections'],
     filters: [
-        { name: 'Images', extensions: ['jpg', 'png'] }
-        // { name: 'All Files', extensions: ['*'] }
+        // { name: 'Images', extensions: ['jpg', 'png'] }
+        { name: 'All Files', extensions: ['*'] }
     ]
 }
 
