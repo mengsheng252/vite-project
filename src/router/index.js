@@ -61,6 +61,11 @@ const router = createRouter({
                     path: 'imageRemoveNoise',
                     name: 'ImageRemoveNoise',
                     component: () => import('@/views/imageClip/imageRemoveNoise.vue')
+                },
+                {
+                    path: 'imageWatermark',
+                    name: 'ImageWatermark',
+                    component: () => import('@/views/imageClip/imageWatermark.vue')
                 }
             ]
         },

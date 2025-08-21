@@ -59,10 +59,11 @@ label{
     width: 100%;
     display: flex;
     gap: 16px;
-    padding: 16px;
+    // padding: 16px;
+    padding: 0 16px;
     margin: 16px 0;
-    border: 1px solid pink;
-    border-radius: 8px;
+    // border: 1px solid pink;
+    // border-radius: 8px;
 
     .select-methods {
       display: flex;
@@ -131,7 +132,8 @@ label{
         &::after {
           content: '原图';
           position: absolute;
-          top: 8px;
+          // top: 8px;
+          top: -32px;
           left: 0;
           right: 0;
           z-index: 1;

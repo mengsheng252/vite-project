@@ -65,7 +65,7 @@ const menus = [
     },
     {
         label: '添加水印',
-        name: 'ImageConvert'
+        name: 'ImageWatermark'
     },
     {
         label: '边缘检测',

@@ -44,7 +44,8 @@
                     >
                         <el-button
                             type="primary"
-                            @click="start">
+                            @click="start"
+                        >
                             应用效果
                         </el-button>
                         <el-button
